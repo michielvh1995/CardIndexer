@@ -1,0 +1,10 @@
+<h2>My Card Collection</h2>
+<ul class="cards">
+    <li *ngFor="let card of cards">
+      <a routerLink="/detail/{{card.internal_id}}">
+        <span class ="badge">{{card.internal_id}}</span>
+        <span class ="name">{{card.name | titlecase}}</span>
+        <span class ="count">{{card.count}}</span>
+      </a>
+    </li>
+</ul>
