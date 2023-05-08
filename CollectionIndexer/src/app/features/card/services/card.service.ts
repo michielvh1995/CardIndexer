@@ -3,9 +3,9 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs';
 
 
-import { Card } from './card';
-import { getCardOverview, CARDS } from './card-list';
-import { MessageService } from './message.service';
+import { Card } from '../../../shared/models/card';
+import { getCardOverview, CARDS } from '../../../shared/card-list';
+import { MessageService } from '../../../shared/messages/services/message.service';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 

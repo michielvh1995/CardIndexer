@@ -4,12 +4,12 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { FormsModule } from '@angular/forms'
 
-import { AppComponent } from './app.component';
-import { CardComponent } from './card/card.component';
-import { CardDetailComponent } from './card-detail/card-detail.component';
-import { MessagesComponent } from './messages/messages.component';
+import { AppComponent } from './components/app.component';
+import { CardComponent } from '../features/card/components/card.component';
+import { CardDetailComponent } from '../card-detail/card-detail.component';
+import { MessagesComponent } from '../shared/messages/components/messages.component';
 import { AppRoutingModule } from './app-routing.module';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { DashboardComponent } from '../dashboard/dashboard.component';
 
 
 @NgModule({

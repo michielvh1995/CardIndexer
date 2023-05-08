@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { CardService } from '../card.service';
-import { Card } from '../card';
+import { CardService } from '../features/card/services/card.service';
+import { Card } from '../shared/models/card';
 
 
 

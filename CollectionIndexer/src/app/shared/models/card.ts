@@ -7,5 +7,7 @@ export interface Card {
     multiverseid?: number;
     set? : string;
     number? : number;
+
+    // Thsi is the location of the card
     location? : string;
   }

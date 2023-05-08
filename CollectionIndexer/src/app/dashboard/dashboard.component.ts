@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Card } from '../card';
-import { CardService } from '../card.service';
+import { Card } from '../shared/models/card';
+import { CardService } from '../features/card/services/card.service';
 
 @Component({
   selector: 'app-dashboard',

@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 
-import { Card } from '../card'; 
-import { CardService } from '../card.service';
-import { MessageService } from '../message.service';
+import { Card } from '../../../shared/models/card'; 
+import { CardService } from '../services/card.service';
+import { MessageService } from '../../../shared/messages/services/message.service';
 
 @Component({
   selector: 'app-card',
-  templateUrl: './card.component.html',
-  styleUrls: ['./card.component.css']
+  templateUrl: '../pages/card.component.html',
+  styleUrls: ['../pages/card.component.css']
 })
 
 export class CardComponent {
