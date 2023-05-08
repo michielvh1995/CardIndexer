@@ -1,13 +1,15 @@
 export interface Card {
     internal_id: number;
     name: string;
-    count: number;
+    card_count: number;
 
     // These are the properties maintained by wizards of the coast
-    multiverseid?: number;
-    set? : string;
+    multiverseID?: number;
+    set_code? : string;
     number? : number;
 
-    // Thsi is the location of the card
+    // This is information regarding the cards themselves
     location? : string;
+
+    foil? : boolean;
   }

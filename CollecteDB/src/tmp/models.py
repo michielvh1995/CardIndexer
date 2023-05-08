@@ -8,7 +8,7 @@ class Card(BaseModel):
     card_count : int = 1
     foil : bool = False
     multiverseID : int | None = None
-    expansion_set : str | None = None
+    set_code : str | None = None
 
 
 # class CardVersion(BaseModel):

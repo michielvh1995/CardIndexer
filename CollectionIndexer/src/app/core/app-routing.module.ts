@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CardComponent } from '../features/card/components/card.component';
-import { DashboardComponent } from '../dashboard/dashboard.component';
+import { DashboardComponent } from '../features/dashboard/components/dashboard.component';
 import { CardDetailComponent } from '../card-detail/card-detail.component';
 import { AddCardComponent } from '../features/add-card/components/add-card.component';
 

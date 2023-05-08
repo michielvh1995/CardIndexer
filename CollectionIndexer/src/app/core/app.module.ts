@@ -9,7 +9,7 @@ import { CardComponent } from '../features/card/components/card.component';
 import { CardDetailComponent } from '../card-detail/card-detail.component';
 import { MessagesComponent } from '../shared/messages/components/messages.component';
 import { AppRoutingModule } from './app-routing.module';
-import { DashboardComponent } from '../dashboard/dashboard.component';
+import { DashboardComponent } from '../features/dashboard/components/dashboard.component';
 
 
 @NgModule({

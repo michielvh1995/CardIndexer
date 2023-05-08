@@ -1,14 +1,14 @@
 <div *ngIf="card" class="cardcontainer">
     <span class = "carddetails">
       <h2>{{card.name | titlecase}} Details</h2>
-      <div><span>id: </span>{{card.multiverseid}}</div>
+      <div><span>id: </span>{{card.multiverseID}}</div>
       <div>
         <label for="card-name">card name: </label>
         <input id="card-name" [(ngModel)]="card.name" placeholder="name">
       </div>
     </span>
     <span class="imgcontainer">
-      <img src="https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid={{card.multiverseid}}&type=card"/>
+      <img src="https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid={{card.multiverseID}}&type=card"/>
 
     </span>
     

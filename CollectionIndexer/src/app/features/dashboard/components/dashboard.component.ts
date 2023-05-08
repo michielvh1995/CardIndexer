@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Card } from '../shared/models/card';
-import { CardService } from '../features/card/services/card.service';
+import { Card } from '../../../shared/models/card';
+import { CardService } from '../../card/services/card.service';
 
 @Component({
   selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: [ './dashboard.component.css' ]
+  templateUrl: '../pages/dashboard.component.html',
+  styleUrls: [ '../pages/dashboard.component.css' ]
 })
 export class DashboardComponent implements OnInit {
   cards: Card[] = [];
@@ -18,6 +18,6 @@ export class DashboardComponent implements OnInit {
 
   getcards(): void {
     this.cardService.getCards()
-      .subscribe(cards => this.cards = cards.slice(1, 5));
+      .subscribe(cards => this.cards = cards.slice(0, 5));
   }
 }
