@@ -11,7 +11,7 @@ router = APIRouter(
 
 
 mock_cards_data = [
-        { "internal_id": 0, "name": "rings of brighthearth", "card_count": 1, "multiverseID": 420608},
+        { "internal_id": 12, "name": "rings of brighthearth", "card_count": 1, "multiverseID": 420608},
         { "internal_id": 1, "name": "sylvan caryatid", "card_count": 1},
         { "internal_id": 2, "name": "phyrexian swarmlord", "card_count": 1, "multiverseID": 218086},
         { "internal_id": 3, "name": "deafening silence", "card_count": 1},
@@ -48,7 +48,7 @@ async def get_all_cards():
 async def get_cards(card_name:str):
     return { }
 
-@router.get("/")
+@router.get("")
 async def get_cards(
         name : str | None = None,
         multiverseID : int | None = None,
@@ -66,8 +66,8 @@ async def get_cards(
         if internal_id:
             if x["internal_id"] == internal_id:
                 filtered.append(x)
-
-    return { "cards" : filtered}
+    print(filtered)
+    return { "Cards" : filtered }
 
 
 @router.post("/new/")
