@@ -32,8 +32,14 @@ export class CollectedbService {
         );
     }
 
-    getCardbyInternalID(name: string): Observable<Card[]>{
-
+    getCardbyInternalID(internalID : number): Observable<Card>{
+      return this.http.get<APICards>(`${this.apiURL}cards?internal_id=${internalID}`)
+        .pipe(
+          tap(fetched => this.log(`${fetched.Cards}`)),
+          catchError(this.handleError<APICards>('Get cards by internal ID', {"Cards":[]})),
+          map(fetched => fetched.Cards[0]),
+          tap(fetched => this.log(`Fetched ${fetched.name}`))
+        );
     }
 
 
