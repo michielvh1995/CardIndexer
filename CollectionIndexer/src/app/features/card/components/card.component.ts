@@ -3,6 +3,8 @@ import { Component } from '@angular/core';
 import { Card } from '../../../shared/models/card'; 
 import { CardService } from '../services/card.service';
 import { MessageService } from '../../../shared/messages/services/message.service';
+import { CollectedbService } from 'src/app/shared/collecteDB/collectedb.service';
+
 
 @Component({
   selector: 'app-card',
@@ -13,14 +15,14 @@ import { MessageService } from '../../../shared/messages/services/message.servic
 export class CardComponent {
   cards: Card[] = [];
 
-  constructor(private cardService: CardService, private messageService: MessageService) {}
+  constructor(private cardService: CollectedbService, private messageService: MessageService) {}
 
   ngOnInit(): void {
-    this.getCards();
+    this.getAllCards();
   }
 
-  getCards() : void {
-    this.cardService.getCards().subscribe(cards => this.cards = cards);
+  getAllCards() : void {
+    this.cardService.getAllCards().subscribe(fetched => this.cards = fetched);
   
   }
 }
