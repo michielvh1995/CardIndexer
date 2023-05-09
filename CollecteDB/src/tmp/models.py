@@ -9,6 +9,7 @@ class Card(BaseModel):
     foil : bool = False
     multiverseID : int | None = None
     set_code : str | None = None
+    internal_id : int | None = None
 
 
 # class CardVersion(BaseModel):

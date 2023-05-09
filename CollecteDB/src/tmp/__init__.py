@@ -35,7 +35,11 @@ async def init():
 
 
 @app.get("/card") 
-async def card(skip : int = 0, limit : int = 100, optionalParam : Annotated[str |None, Query(max_length = 50, regex = ".*")] = None ):
+async def card(
+            skip : int = 0,
+            limit : int = 100,
+            optionalParam : Annotated[str |None, Query(max_length = 50, regex = ".*")] = None
+        ):
     res = {"cards": fake_items_db[skip : skip + limit]}
     res.update({"message": "Got all the cards!"})
     return res

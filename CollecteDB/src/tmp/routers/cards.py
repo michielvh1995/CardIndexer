@@ -9,6 +9,22 @@ router = APIRouter(
     responses={404: {"Description": "Not found"}},
 )
 
+
+mock_cards_data = [
+        { "internal_id": 0, "name": "rings of brighthearth", "card_count": 1, "multiverseID": 420608},
+        { "internal_id": 1, "name": "sylvan caryatid", "card_count": 1},
+        { "internal_id": 2, "name": "phyrexian swarmlord", "card_count": 1, "multiverseID": 218086},
+        { "internal_id": 3, "name": "deafening silence", "card_count": 1},
+        { "internal_id": 4, "name": "crashing drawbridge", "card_count": 1},
+        { "internal_id": 5, "name": "roving keep", "card_count": 1},
+        { "internal_id": 6, "name": "pia nalaar", "card_count": 1},
+        { "internal_id": 7, "name": "jaya, venerated firemage", "card_count": 1},
+        { "internal_id": 8, "name": "force of despair", "card_count": 1},
+        { "internal_id": 9, "name": "asylum visitor", "card_count": 1},
+        { "internal_id": 10, "name": "liliana dreadhorde general", "card_count": 1},
+        { "internal_id": 11, "name": "ob nixilis, the hate-twisted", "card_count": 1}
+    ]
+
 # Cards API endpoints:
 
 # Returns a list of how many of a specific card are in their locations
@@ -24,13 +40,31 @@ async def get_card_count(card_name:str):
 
 # Returns a list of all the card names in the collection
 @router.get("/all")
-async def get_all_cards(card_name:str):
-    return { }
+async def get_all_cards():
+    return {"Cards" : mock_cards_data}
 
 # Returns all information regarding a card in the collection
 @router.get("/{card_name}")
 async def get_cards(card_name:str):
     return { }
+
+@router.get("/")
+async def get_cards(
+        name : str | None = None,
+        multiverseID : int | None = None
+    ):
+    
+    filtered = []
+    for x in mock_cards_data:
+        if name:
+            if x["name"] == name:
+                filtered.append(x)
+        if multiverseID:
+            if x["multiverseID"] == multiverseID:
+                filtered.append(x)
+
+    return { }
+
 
 @router.post("/new/")
 async def add_card(
@@ -39,10 +73,10 @@ async def add_card(
     total = sum(cards.card_count)
     return {"message": "successfully inserted {total} cards"}
 
-@router.put("/move/{card_name}")
+@router.post("/move/{card_name}")
 async def move_card(card_name:str):
     return {}
 
-@router.put("/{card_name}")
+@router.post("/{card_name}")
 async def update_card(card_name:str):
     return {}
