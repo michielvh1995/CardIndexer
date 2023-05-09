@@ -51,9 +51,10 @@ async def get_cards(card_name:str):
 @router.get("/")
 async def get_cards(
         name : str | None = None,
-        multiverseID : int | None = None
+        multiverseID : int | None = None,
+        internal_id : int | None = None
     ):
-    
+
     filtered = []
     for x in mock_cards_data:
         if name:
@@ -62,8 +63,11 @@ async def get_cards(
         if multiverseID:
             if x["multiverseID"] == multiverseID:
                 filtered.append(x)
+        if internal_id:
+            if x["internal_id"] == internal_id:
+                filtered.append(x)
 
-    return { }
+    return { "cards" : filtered}
 
 
 @router.post("/new/")

@@ -32,6 +32,11 @@ export class CollectedbService {
         );
     }
 
+    getCardbyInternalID(name: string): Observable<Card[]>{
+
+    }
+
+
     private handleError<T>(operation = 'default operation', result?: T){
       return (error: any): Observable<T> => {
 
