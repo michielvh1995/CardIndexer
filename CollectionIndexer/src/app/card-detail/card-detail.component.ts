@@ -2,9 +2,7 @@ import { Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { CardService } from '../features/card/services/card.service';
 import { Card } from '../shared/models/card';
-
 import { CollectedbService } from '../shared/collecteDB/collectedb.service';
 
 
@@ -16,7 +14,6 @@ import { CollectedbService } from '../shared/collecteDB/collectedb.service';
 export class CardDetailComponent {
   constructor(
     private route: ActivatedRoute,
-    private cardService: CardService,
     private location: Location,
     private collectedbService: CollectedbService
   ) {}
@@ -27,8 +24,11 @@ export class CardDetailComponent {
 
   getCard(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.collectedbService.getCardbyInternalID(id)
-      .subscribe(card => this.card = card);
+    this.collectedbService.searchCardsByFieldsValues({})
+      .subscribe(card => this.card = card[0]);
+    
+    // this.collectedbService.getCardbyInternalID(id)
+    //   .subscribe(card => this.card = card);
   }
 
   goBack(): void {
