@@ -9,19 +9,19 @@ router = APIRouter(
     responses={404: {"Description": "Not found"}},
 )
 
-mock_cards_data : List[Card] = [
-        { "foil" = False,  "internal_id": 12, "name": "rings of brighthearth", "card_count": 1, "multiverseID": 420608},
-        { "foil" = False,  "internal_id": 1, "name": "sylvan caryatid", "card_count": 1},
-        { "foil" = False,  "internal_id": 2, "name": "phyrexian swarmlord", "card_count": 1, "multiverseID": 218086},
-        { "foil" = False,  "internal_id": 3, "name": "deafening silence", "card_count": 1},
-        { "foil" = False,  "internal_id": 4, "name": "crashing drawbridge", "card_count": 1},
-        { "foil" = False,  "internal_id": 5, "name": "roving keep", "card_count": 1},
-        { "foil" = False,  "internal_id": 6, "name": "pia nalaar", "card_count": 1},
-        { "foil" = False,  "internal_id": 7, "name": "jaya, venerated firemage", "card_count": 1},
-        { "foil" = False,  "internal_id": 8, "name": "force of despair", "card_count": 1},
-        { "foil" = False,  "internal_id": 9, "name": "asylum visitor", "card_count": 1},
-        { "foil" = False,  "internal_id": 10, "name": "liliana dreadhorde general", "card_count": 1},
-        { "foil" = False,  "internal_id": 11, "name": "ob nixilis, the hate-twisted", "card_count": 1}
+mock_cards_data = [
+        { "foil" : False, "internal_id": 12, "name": "rings of brighthearth", "card_count": 1, "multiverseID": 420608},
+        { "foil" : False, "internal_id": 1, "name": "sylvan caryatid", "card_count": 1},
+        { "foil" : False, "internal_id": 2, "name": "phyrexian swarmlord", "card_count": 1, "multiverseID": 218086},
+        { "foil" : False, "internal_id": 3, "name": "deafening silence", "card_count": 1},
+        { "foil" : False, "internal_id": 4, "name": "crashing drawbridge", "card_count": 1},
+        { "foil" : False, "internal_id": 5, "name": "roving keep", "card_count": 1},
+        { "foil" : False, "internal_id": 6, "name": "pia nalaar", "card_count": 1},
+        { "foil" : False, "internal_id": 7, "name": "jaya, venerated firemage", "card_count": 1},
+        { "foil" : False, "internal_id": 8, "name": "force of despair", "card_count": 1},
+        { "foil" : False, "internal_id": 9, "name": "asylum visitor", "card_count": 1},
+        { "foil" : False, "internal_id": 10, "name": "liliana dreadhorde general", "card_count": 1},
+        { "foil" : False, "internal_id": 11, "name": "ob nixilis, the hate-twisted", "card_count": 1}
     ]
 
 # Cards API endpoints:
