@@ -54,6 +54,9 @@ async def get_cards(
         multiverseID : int | None = None,
         internal_id : int | None = None
     ):
+    print("name:", name)
+    print("multiverseID:", multiverseID)
+    print("internal_id:", internal_id)
 
     filtered = []
     for x in mock_cards_data:
