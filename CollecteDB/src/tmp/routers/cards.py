@@ -54,23 +54,23 @@ async def get_cards(
         multiverseID : int | None = None,
         internal_id : int | None = None
     ):
-    print("name:", name)
-    print("multiverseID:", multiverseID)
-    print("internal_id:", internal_id)
 
-    filtered = []
-    for x in mock_cards_data:
+    # Filterfunction used to filter the mock database based on the query variables
+    def filterFunc(card : Card):
         if name:
-            if x["name"] == name:
-                filtered.append(x)
+            if card["name"] != name:
+                return False
         if multiverseID:
-            if x["multiverseID"] == multiverseID:
-                filtered.append(x)
+            if card["multiverseID"] != multiverseID:
+                return False
         if internal_id:
-            if x["internal_id"] == internal_id:
-                filtered.append(x)
-    print(filtered)
-    return { "Cards" : filtered }
+            if card["internal_id"] != internal_id:
+                return False
+        return True
+    
+    # DEBUG: print the results of the query
+    print(list(filter(filterFunc, mock_cards_data)))
+    return { "Cards" : list(filter(filterFunc, mock_cards_data)) }
 
 
 @router.post("/new/")
