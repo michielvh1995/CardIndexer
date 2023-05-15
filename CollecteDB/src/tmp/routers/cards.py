@@ -9,8 +9,8 @@ router = APIRouter(
     responses={404: {"Description": "Not found"}},
 )
 
-mock_cards_data = [
-        { "foil" : False, "internal_id": 12, "name": "rings of brighthearth", "card_count": 1, "multiverseID": 420608},
+mock_cards_data : List[Card] = [
+        { "foil" : False, "internal_id": 0, "name": "rings of brighthearth", "card_count": 1, "multiverseID": 420608},
         { "foil" : False, "internal_id": 1, "name": "sylvan caryatid", "card_count": 1},
         { "foil" : False, "internal_id": 2, "name": "phyrexian swarmlord", "card_count": 1, "multiverseID": 218086},
         { "foil" : False, "internal_id": 3, "name": "deafening silence", "card_count": 1},
@@ -54,7 +54,7 @@ async def get_cards(
         internal_id : int | None = None,
         foil : bool = False
     ):
-
+    print(internal_id)
     # Filterfunction used to filter the mock database based on the query variables
     def filterFunc(card : Card):
         if name:
@@ -63,7 +63,7 @@ async def get_cards(
         if multiverseID:
             if card["multiverseID"] != multiverseID:
                 return False
-        if internal_id:
+        if internal_id is not None:
             if card["internal_id"] != internal_id:
                 return False
         if card["foil"] != foil:
