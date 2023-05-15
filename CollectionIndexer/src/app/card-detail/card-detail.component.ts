@@ -24,11 +24,11 @@ export class CardDetailComponent {
 
   getCard(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.collectedbService.searchCardsByFieldsValues({})
-      .subscribe(card => this.card = card[0]);
+    // this.collectedbService.searchCardsByFieldsValues({})
+    //   .subscribe(card => this.card = card[0]);
     
-    // this.collectedbService.getCardbyInternalID(id)
-    //   .subscribe(card => this.card = card);
+    this.collectedbService.getCardbyInternalID(id)
+      .subscribe(card => this.card = card);
   }
 
   goBack(): void {
