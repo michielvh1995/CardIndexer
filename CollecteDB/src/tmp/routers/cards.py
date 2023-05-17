@@ -55,10 +55,13 @@ async def get_cards(
         foil : bool = False
     ):
 
+    filters = locals()
+
     # Filterfunction used to filter the mock database based on the query variables
     def filterFunc(card : Card):
-        for filter, value in locals().items():
-            if card[filter] != value:
+        for key, value in filters.items():
+
+            if value is not None and card[key] != value:
                 return False
             
         return True
@@ -82,3 +85,15 @@ async def move_card(card_name:str):
 @router.post("/{card_name}")
 async def update_card(card_name:str):
     return {}
+
+
+@router.put("/updatebyID/{card_id}")
+async def update_card_by_ID(card_id : int, new_values : Annotated[Card, Body()]):
+    updated_fields : List[str] = []
+
+    for key, value in new_values.dict.items():
+        if mock_cards_data[card_id][key] != value:
+            updated_fields.append(key)
+            mock_cards_data[card_id][key] = value
+
+    return {"updated" : updated_fields}
