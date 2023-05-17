@@ -54,20 +54,13 @@ async def get_cards(
         internal_id : int | None = None,
         foil : bool = False
     ):
-    print(internal_id)
+
     # Filterfunction used to filter the mock database based on the query variables
     def filterFunc(card : Card):
-        if name:
-            if card["name"] != name:
+        for filter, value in locals().items():
+            if card[filter] != value:
                 return False
-        if multiverseID:
-            if card["multiverseID"] != multiverseID:
-                return False
-        if internal_id is not None:
-            if card["internal_id"] != internal_id:
-                return False
-        if card["foil"] != foil:
-            return False
+            
         return True
     
     # DEBUG: print the results of the query
