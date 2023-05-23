@@ -9,44 +9,61 @@ router = APIRouter(
     responses={404: {"Description": "Not found"}},
 )
 
-mock_cards_data : List[Card] = [
-        { "foil" : False, "internal_id": 0, "name": "rings of brighthearth", "card_count": 1, "multiverseID": 420608},
-        { "foil" : False, "internal_id": 1, "name": "sylvan caryatid", "card_count": 1},
-        { "foil" : False, "internal_id": 2, "name": "phyrexian swarmlord", "card_count": 1, "multiverseID": 218086},
-        { "foil" : False, "internal_id": 3, "name": "deafening silence", "card_count": 1},
-        { "foil" : False, "internal_id": 4, "name": "crashing drawbridge", "card_count": 1},
-        { "foil" : False, "internal_id": 5, "name": "roving keep", "card_count": 1},
-        { "foil" : False, "internal_id": 6, "name": "pia nalaar", "card_count": 1},
-        { "foil" : False, "internal_id": 7, "name": "jaya, venerated firemage", "card_count": 1},
-        { "foil" : False, "internal_id": 8, "name": "force of despair", "card_count": 1},
-        { "foil" : False, "internal_id": 9, "name": "asylum visitor", "card_count": 1},
-        { "foil" : False, "internal_id": 10, "name": "liliana dreadhorde general", "card_count": 1},
-        { "foil" : False, "internal_id": 11, "name": "ob nixilis, the hate-twisted", "card_count": 1}
-    ]
 
+mock_cards_data : List[Card] = [
+    Card(name = "rings of brighthearth", internal_id= 0, versions=[CardVersion(card_count=1, foil=False, multiverseID=420608)] ),
+    Card(name ="sylvan caryatid", internal_id= 1, versions=[CardVersion(card_count = 1)]),
+    Card(name ="phyrexian swarmlord", internal_id= 2, versions=[CardVersion(multiverseID = 218086)]),
+    Card(name ="deafening silence", internal_id= 3, versions=[CardVersion(card_count = 1)]),
+    Card(name ="crashing drawbridge", internal_id= 4, versions=[CardVersion(card_count = 1)]),
+    Card(name ="roving keep", internal_id= 5, versions=[CardVersion(card_count = 1)]),
+    Card(name ="pia nalaar", internal_id= 6, versions=[CardVersion(card_count = 1)]),
+    Card(name ="jaya, venerated firemage", internal_id= 7, versions=[CardVersion(card_count = 1)]),
+    Card(name ="force of despair", internal_id= 8, versions=[CardVersion(card_count = 1)]),
+    Card(name ="asylum visitor", internal_id= 9, versions=[CardVersion(card_count = 1)]),
+    Card(name ="liliana dreadhorde general", internal_id= 10, versions=[CardVersion(card_count = 1)]),
+    Card(name ="ob nixilis, the hate-twisted", internal_id= 11, versions=[CardVersion(card_count = 1)])
+]
 
 def SearchForCardbyName(name : str, fields : List | None = None) -> tuple[bool, Card| None]:
     """ This function searches the database for the named card. 
     It then returns whether or not it exists and, if present, it's data.
     """
     for card in mock_cards_data:
-        if card["name"] == name:
+        if card.name == name:
             return (True, card)
     return (False, None)
 
 def AddCopiesofCard(name : str, copy : Card) -> Card:
     """ This function adds a copy of a card to the database.
     """
-    for i, card in enumerate(mock_cards_data):
-        if card["name"] == name:
-            mock_cards_data[i]["card_count"] += copy.card_count
-            return mock_cards_data[i]
+    for card in mock_cards_data:
+        if card.name == name:
+
+            # Here we either add more cards of the version we already have, to add a new version
+            # To check whether or not it is present and updated, we use the updated variable
+        
+
+            # Cards with the same multiverse ID can either be foil or not
+            for version in card.versions:
+                updated : bool = False
+                
+                for copyVersion in copy.versions:
+                    if version.multiverseID == copyVersion.multiverseID and version.foil == copyVersion.foil:
+                        version.card_count += copyVersion.card_count
+                        updated = True
+            
+                if not updated:
+                    card.versions.append(copy)
+                
+            return card
+                
     
 
 def AddNewCard(copy : Card) -> Card:
     """ This function adds a new not-yet existing card to the database
     """
-    internal_id = len(mock_cards_data) + 1
+    internal_id = len(mock_cards_data) + 2
     copy.internal_id = internal_id
     mock_cards_data.append(copy)
     return copy
@@ -88,10 +105,17 @@ async def get_cards(
 
     # Filterfunction used to filter the mock database based on the query variables
     def filterFunc(card : Card):
-        for key, value in filters.items():
-            if value is not None and card[key] != value:
-                return False
-            
+        if name is not None and not card.name == name:
+            return False
+        if internal_id is not None and not card.internal_id == internal_id:
+            return False
+        
+        if multiverseID is not None and not multiverseID in [vers.multiverseID for vers in card.versions]:
+            return False
+        
+        if foil and not foil in [vers.foil for vers in card.versions]:
+            return False
+        
         return True
     
     # DEBUG: print the results of the query
@@ -103,7 +127,7 @@ async def get_cards(
 async def add_card(
         Cards : Annotated[List[Card], Body(embed = True)]
     ):
-    print(Cards)
+    print("post: new", Cards)
     updated = []
 
     for card in Cards:
@@ -115,9 +139,6 @@ async def add_card(
             updated.append(AddCopiesofCard(card.name, card))
         else:
             updated.append(AddNewCard(card))
-
-    total = sum([x.card_count for x in updated])
-    print("successfully inserted {total} cards")
 
     return {"Cards": updated}
 

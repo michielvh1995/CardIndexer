@@ -9,21 +9,16 @@ from pydantic import BaseModel, Field
 class CardVersion(BaseModel):
     card_count : int = 1
     foil : bool = False
-    multiverseID : int | None = None
+    multiverseID : int | None = None    # We need an index on this field
     set_code : str | None = None
 
 # Base model for the cards, currently using a legacy version as this is currently in use with the front end as well 
 class Card(BaseModel):
-    name : str
-    internal_id : int | None = None
-    card_count : int = 1
-    foil : bool = False
-    multiverseID : int | None = None
-    set_code : str | None = None
+    name : str                          # We need an index on this field
+    internal_id : int | None
+    versions : List[CardVersion]
 
-    #versions : List[CardVersion] = None
-
-
+# {"Cards":[{"name":"asdfasdf","versions":[{"card_count":1}]}]}
 
 # class CardVersion(BaseModel):
 #     multiverseid: int = 0
