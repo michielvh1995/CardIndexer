@@ -20,7 +20,7 @@ export class AddCardComponent {
   add(name: string): void {
     name = name.trim();
     if (!name) { return; }
-    this.collecteDBService.postNewCard({ name } as Card).subscribe(hero => {
+    this.collecteDBService.postNewCard({ name, "card_count" : 1 } as Card).subscribe(hero => {
       this.goBack();
     });
   }

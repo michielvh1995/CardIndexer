@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MessageService } from '../messages/services/message.service';
 import { Observable, catchError, map, of, tap } from 'rxjs';
 import { Card } from '../models/card';
-import { APICards } from '../models/api';
+import { CardsAPIModel, APICard, CardVersion } from '../models/api';
 
 @Injectable({
   providedIn: 'root'
@@ -26,11 +26,54 @@ export class CollectedbService {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
 
+
+    packAPICard(card : Card) : APICard {
+      let version : CardVersion = {
+        "card_count": card.card_count,
+        "multiverseID" : card.multiverseID,
+        "set_code" : card.set_code,
+        "foil" : card.foil
+      };
+      
+      this.log(`version cc: ${version.card_count}`);
+
+      return {
+        "internal_id" : card.internal_id,
+        "name" : card.name,
+        "versions" : [version]
+      };
+    }
+
+    unpackAPICard(card : APICard) : Card[] {
+      var unpacked = []
+      for (let index = 0; index < card.versions.length; index++) {
+        const version = card.versions[index];
+        unpacked.push({
+          "internal_id" : card.internal_id,
+          "name": card.name,
+          "card_count": version.card_count,
+          "multiverseID" : version.multiverseID,
+          "set_code" : version.set_code,
+          "foil" : version.foil
+        });
+      }
+      return unpacked as Card[];
+    }
+
+    unpackCardAPIModel(cards : CardsAPIModel) : Card[] {
+      var cardsArray : Card[] = [];
+      for (let index = 0; index < cards.Cards.length; index++) {
+        cardsArray = cardsArray.concat(this.unpackAPICard(cards.Cards[index]));
+      }
+      return cardsArray;
+    }
+
+
     getAllCards(): Observable<Card[]> { 
-      return this.http.get<APICards>(`${this.apiURL}cards/all`)
+      return this.http.get<CardsAPIModel>(`${this.apiURL}cards/all`)
         .pipe(
-          catchError(this.handleError<APICards>('Get all cards', {"Cards":[]})),
-          map(fetched => fetched.Cards),  // Extract the fetched cards
+          catchError(this.handleError<CardsAPIModel>('Get all cards', {"Cards":[]})),
+          map(fetched => this.unpackCardAPIModel(fetched)),
           tap(fetched => this.log(`Fetched ${fetched.length} cards`)) // Log success
         );
     }
@@ -47,28 +90,30 @@ export class CollectedbService {
       }
 
       // And then we query the server, with the query string
-      return this.http.get<APICards>(`${this.apiURL}cards${queryString}`)
+      return this.http.get<CardsAPIModel>(`${this.apiURL}cards${queryString}`)
         .pipe(
-          catchError(this.handleError<APICards>('Get cards by internal ID', {"Cards":[]})),
+          catchError(this.handleError<CardsAPIModel>('Get cards by internal ID', {"Cards":[]})),
           map(fetched => fetched.Cards),  // Extract the fetched cards
           tap(fetched => this.log(`Fetched ${fetched.length} cards`)) // Log success
         );
     }
 
+    // 
     searchCardsByField(field:string, value:string) {
-      return this.http.get<APICards>(`${this.apiURL}cards?${field}=${value}`)
+      return this.http.get<CardsAPIModel>(`${this.apiURL}cards?${field}=${value}`)
         .pipe(
-          catchError(this.handleError<APICards>('Get cards by internal ID', {"Cards":[]})),
+          catchError(this.handleError<CardsAPIModel>('Get cards by internal ID', {"Cards":[]})),
           map(fetched => fetched.Cards[0]), // Extract the cards from the response
           tap(fetched => this.log(`Fetched ${fetched.name}`))
         );
     }
 
+    // I do not like this function as the card name is the primary UID
     getCardbyInternalID(internalID : number): Observable<Card>{
-      return this.http.get<APICards>(`${this.apiURL}cards?internal_id=${internalID}`)
+      return this.http.get<CardsAPIModel>(`${this.apiURL}cards?internal_id=${internalID}`)
         .pipe(
-          catchError(this.handleError<APICards>('Get cards by internal ID', {"Cards":[]})),
-          map(fetched => fetched.Cards[0]), // Extract the cards from the response
+          catchError(this.handleError<CardsAPIModel>('Get cards by internal ID', {"Cards":[]})),
+          map(fetched => this.unpackCardAPIModel(fetched)[0]), // Extract the cards from the response
           tap(fetched => this.log(`Fetched ${fetched.name}`))
         );
     }
@@ -81,12 +126,13 @@ export class CollectedbService {
       );
     }
 
+    // Currently I use a jank-ass packing function to wrap cards into the new APi format
+    // The rest of the program will have to be rewritten to use the better format
     postNewCard(card : Card) : Observable<Card> {
-      let cardWrapper : APICards = {"Cards" : [card]}
-      this.log(`Called postNewCard, with ${cardWrapper.Cards}`)
+      this.log(`Card to be posted: ${card.card_count}`)
+      let cardWrapper : CardsAPIModel = {"Cards" : [this.packAPICard(card)]};
 
-
-      return this.http.post<APICards>(`${this.apiURL}cards/new/`, cardWrapper, this.httpOptions).pipe(
+      return this.http.post<CardsAPIModel>(`${this.apiURL}cards/new/`, cardWrapper, this.httpOptions).pipe(
         map(newCards => newCards.Cards[0]),
         tap(newCards => this.log(`Added ${newCards.name}`)),
         catchError(this.handleError<any>('PostNewCard'))
