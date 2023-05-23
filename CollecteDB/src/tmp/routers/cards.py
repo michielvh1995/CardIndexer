@@ -1,7 +1,7 @@
 from typing import List, Annotated
 from fastapi import APIRouter, Body
 
-from ..models import Card
+from ..models import Card, CardVersion
 
 router = APIRouter(
     prefix="/cards",
@@ -23,6 +23,35 @@ mock_cards_data : List[Card] = [
         { "foil" : False, "internal_id": 10, "name": "liliana dreadhorde general", "card_count": 1},
         { "foil" : False, "internal_id": 11, "name": "ob nixilis, the hate-twisted", "card_count": 1}
     ]
+
+
+def SearchForCardbyName(name : str, fields : List | None = None) -> tuple[bool, Card| None]:
+    """ This function searches the database for the named card. 
+    It then returns whether or not it exists and, if present, it's data.
+    """
+    for card in mock_cards_data:
+        if card["name"] == name:
+            return (True, card)
+    return (False, None)
+
+def AddCopiesofCard(name : str, copy : Card) -> Card:
+    """ This function adds a copy of a card to the database.
+    """
+    for i, card in enumerate(mock_cards_data):
+        if card["name"] == name:
+            mock_cards_data[i]["card_count"] += copy.card_count
+            return mock_cards_data[i]
+    
+
+def AddNewCard(copy : Card) -> Card:
+    """ This function adds a new not-yet existing card to the database
+    """
+    internal_id = len(mock_cards_data) + 1
+    copy.internal_id = internal_id
+    mock_cards_data.append(copy)
+    return copy
+
+
 
 # Cards API endpoints:
 
@@ -60,7 +89,6 @@ async def get_cards(
     # Filterfunction used to filter the mock database based on the query variables
     def filterFunc(card : Card):
         for key, value in filters.items():
-
             if value is not None and card[key] != value:
                 return False
             
@@ -73,10 +101,25 @@ async def get_cards(
 
 @router.post("/new/")
 async def add_card(
-        cards : Annotated[List[Card], Body(embed = True)]
+        Cards : Annotated[List[Card], Body(embed = True)]
     ):
-    total = sum(cards.card_count)
-    return {"message": "successfully inserted {total} cards"}
+    print(Cards)
+    updated = []
+
+    for card in Cards:
+        search = SearchForCardbyName(card.name)
+
+        # If the card is present in the database we add the new copies
+        # and if it is a new card we create a new entry
+        if search[0]:
+            updated.append(AddCopiesofCard(card.name, card))
+        else:
+            updated.append(AddNewCard(card))
+
+    total = sum([x.card_count for x in updated])
+    print("successfully inserted {total} cards")
+
+    return {"Cards": updated}
 
 @router.post("/move/{card_name}")
 async def move_card(card_name:str):
@@ -91,8 +134,8 @@ async def update_card(card_name:str):
 async def update_card_by_ID(card_id : int, new_values : Annotated[Card, Body()]):
     updated_fields : List[str] = []
 
-    for key, value in new_values.dict.items():
-        if mock_cards_data[card_id][key] != value:
+    for key, value in iter(new_values):
+        if value is not None and mock_cards_data[card_id][key] != value:
             updated_fields.append(key)
             mock_cards_data[card_id][key] = value
 

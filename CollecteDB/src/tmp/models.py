@@ -13,7 +13,7 @@ class CardVersion(BaseModel):
     set_code : str | None = None
 
 # Base model for the cards, currently using a legacy version as this is currently in use with the front end as well 
-class Card(Document):
+class Card(BaseModel):
     name : str
     internal_id : int | None = None
     card_count : int = 1
