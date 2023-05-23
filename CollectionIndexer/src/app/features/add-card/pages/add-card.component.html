@@ -1,1 +1,16 @@
-<p>add-card works!</p>
+
+
+<div class="cardcontainer">
+    <span class = "carddetails">
+      <div>
+        <label for="card-name">card name: </label>
+        <input id="card-name" #cardName placeholder="name">
+      </div>
+    </span>
+
+    <button type="button" class="add-button" (click)="add(cardName.value); cardName.value=''">
+        Add card
+      </button>
+</div>
+
+<button type="button" (click)="goBack()">Cancel</button>

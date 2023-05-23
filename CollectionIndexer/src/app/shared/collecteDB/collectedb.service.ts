@@ -22,6 +22,9 @@ export class CollectedbService {
     // URL for the API, this needs to be configurable from a config file in the future
     private apiURL = "http://localhost:8000/"
 
+    httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
 
     getAllCards(): Observable<Card[]> { 
       return this.http.get<APICards>(`${this.apiURL}cards/all`)
@@ -69,6 +72,27 @@ export class CollectedbService {
           tap(fetched => this.log(`Fetched ${fetched.name}`))
         );
     }
+
+    // I do not like this function as the card name is the primary UID
+    updateCardbyID(internalID : number, newValues : Card) : Observable<any> {
+      return this.http.put(`${this.apiURL}cards/updatebyID/${internalID}`, newValues, this.httpOptions ).pipe(
+        catchError(this.handleError<any>('Update card')),
+        tap(response => this.log(`Updated ${internalID} on fields: ${response["updated"]}`))
+      );
+    }
+
+    postNewCard(card : Card) : Observable<Card> {
+      let cardWrapper : APICards = {"Cards" : [card]}
+      this.log(`Called postNewCard, with ${cardWrapper.Cards}`)
+
+
+      return this.http.post<APICards>(`${this.apiURL}cards/new/`, cardWrapper, this.httpOptions).pipe(
+        map(newCards => newCards.Cards[0]),
+        tap(newCards => this.log(`Added ${newCards.name}`)),
+        catchError(this.handleError<any>('PostNewCard'))
+      );
+    }
+    
 
     private handleError<T>(operation = 'default operation', result?: T){
       return (error: any): Observable<T> => {

@@ -35,5 +35,12 @@ export class CardDetailComponent {
     this.location.back();
   }
 
+  save(): void {
+    if (this.card) {
+      this.collectedbService.updateCardbyID(this.card.internal_id, this.card)
+        .subscribe(() => this.goBack());
+    }
+  }
+
   @Input() card? : Card;
 }
