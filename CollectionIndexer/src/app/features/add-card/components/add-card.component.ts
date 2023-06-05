@@ -15,6 +15,12 @@ export class AddCardComponent {
     private collecteDBService : CollectedbService
   ) { }
   
+  multiverseID : number = 0;
+
+  // This function queries the wizards API to look for the card
+  findVersions(name: string) : void {
+    
+  }
   
 
   add(name: string): void {

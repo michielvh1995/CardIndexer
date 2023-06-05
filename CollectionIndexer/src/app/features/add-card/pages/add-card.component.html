@@ -1,16 +1,16 @@
-
-
 <div class="cardcontainer">
-    <span class = "carddetails">
-      <div>
-        <label for="card-name">card name: </label>
-        <input id="card-name" #cardName placeholder="name">
-      </div>
-    </span>
+  <span class = "carddetails">
+    <div>
+      <label for="card-name">card name: </label>
+      <input id="card-name" #cardName placeholder="name">
+      <input id="card-set" #cardSet placeholder="Set">
+    </div>
+  </span>
 
-    <button type="button" class="add-button" (click)="add(cardName.value); cardName.value=''">
-        Add card
-      </button>
+  <button type="button" class="add-button" (click)="add(cardName.value); cardName.value=''">
+      Add card
+    </button>
 </div>
 
 <button type="button" (click)="goBack()">Cancel</button>
+
