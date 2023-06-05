@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
 import { CollectedbService } from 'src/app/shared/collecteDB/collectedb.service';
-import { Card } from 'src/app/shared/models/card';
+import { APICard } from 'src/app/shared/models/api';
 
 @Component({
   selector: 'app-add-card',
@@ -20,7 +20,9 @@ export class AddCardComponent {
   add(name: string): void {
     name = name.trim();
     if (!name) { return; }
-    this.collecteDBService.postNewCard({ name, "card_count" : 1 } as Card).subscribe(hero => {
+    
+    let cardVers = [{"card_count" : 1}];
+    this.collecteDBService.postNewCard({ name, "versions" : cardVers } as APICard).subscribe(hero => {
       this.goBack();
     });
   }

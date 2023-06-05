@@ -27,6 +27,7 @@ export class CollectedbService {
     };
 
 
+    // Turn a card from the old card model into the new one, as used by the API
     packAPICard(card : Card) : APICard {
       let version : CardVersion = {
         "card_count": card.card_count,
@@ -44,6 +45,9 @@ export class CollectedbService {
       };
     }
 
+    // Unpack function to convert the APICard model to the regular card model. 
+    // In other words it turns the APICard model into a list of Cards.
+    // Each version of the card becomes its own card here
     unpackAPICard(card : APICard) : Card[] {
       var unpacked = []
       for (let index = 0; index < card.versions.length; index++) {
@@ -60,6 +64,10 @@ export class CollectedbService {
       return unpacked as Card[];
     }
 
+    // This function turns the response of the API into a list of cards.
+    // This is done using the unpackAPICard function as helper function
+    // the CardsAPIModel contains a list of Cards in the API format, 
+    //   which in turn has a bunch of versions
     unpackCardAPIModel(cards : CardsAPIModel) : Card[] {
       var cardsArray : Card[] = [];
       for (let index = 0; index < cards.Cards.length; index++) {
@@ -68,7 +76,8 @@ export class CollectedbService {
       return cardsArray;
     }
 
-
+    // Query the server for all cards, via cards/all. 
+    // Might have to update this function to allow for pagination
     getAllCards(): Observable<Card[]> { 
       return this.http.get<CardsAPIModel>(`${this.apiURL}cards/all`)
         .pipe(
@@ -78,8 +87,8 @@ export class CollectedbService {
         );
     }
   
-    searchCardsByFieldsValues(parameters : {[field : string]: string}) {
-      
+    // Query the server for cards with field/constraint pairs as a dictionary
+    searchCardsByFieldsValues(parameters : {[field : string]: string}) {    
       // First we build up the query string based on the field-value pairs; so it becomes:
       // ?field1=valu1e&field2=value2&
       var queryString = `?`
@@ -98,7 +107,7 @@ export class CollectedbService {
         );
     }
 
-    // 
+    // Query the server on a single field with a value
     searchCardsByField(field:string, value:string) {
       return this.http.get<CardsAPIModel>(`${this.apiURL}cards?${field}=${value}`)
         .pipe(
@@ -108,6 +117,7 @@ export class CollectedbService {
         );
     }
 
+    // Query the server for a card on its internalID.
     // I do not like this function as the card name is the primary UID
     getCardbyInternalID(internalID : number): Observable<Card>{
       return this.http.get<CardsAPIModel>(`${this.apiURL}cards?internal_id=${internalID}`)
@@ -118,6 +128,7 @@ export class CollectedbService {
         );
     }
 
+    // Update the server for a card on its internalID.
     // I do not like this function as the card name is the primary UID
     updateCardbyID(internalID : number, newValues : Card) : Observable<any> {
       return this.http.put(`${this.apiURL}cards/updatebyID/${internalID}`, newValues, this.httpOptions ).pipe(
@@ -126,9 +137,33 @@ export class CollectedbService {
       );
     }
 
-    // Currently I use a jank-ass packing function to wrap cards into the new APi format
+    // This function can be used to post a single new card to the server
+    postNewCard(card : APICard) : Observable<CardsAPIModel> {
+      this.log(`Card to be posted: ${card.name}`);
+      let cardWrapper : CardsAPIModel = {"Cards" : [card] };
+      
+      return this.http.post<CardsAPIModel>(`${this.apiURL}cards/new/`, cardWrapper, this.httpOptions).pipe(
+        map(newCards => newCards.Cards[0]),
+        tap(newCards => this.log(`Added ${newCards.name} with ID ${newCards.internal_id}`)),
+        catchError(this.handleError<any>('PostNewCard'))
+      );
+    }
+
+    // This function can be used to post a single new card to the server
+    postNewCards(cards : [APICard]) : Observable<CardsAPIModel> {
+      this.log(`Posting ${cards.length} cards`);
+      let cardWrapper : CardsAPIModel = {"Cards" : cards };
+      
+      return this.http.post<CardsAPIModel>(`${this.apiURL}cards/new/`, cardWrapper, this.httpOptions).pipe(
+        map(newCards => newCards.Cards),
+        tap(newCards => this.log(`Added ${newCards.length} cards`)),
+        catchError(this.handleError<any>('PostNewCards'))
+      );
+    }
+
+    // Currently I use a jank-ass packing function to wrap cards into the new API format
     // The rest of the program will have to be rewritten to use the better format
-    postNewCard(card : Card) : Observable<Card> {
+    postNewCardOLD(card : Card) : Observable<Card> {
       this.log(`Card to be posted: ${card.card_count}`)
       let cardWrapper : CardsAPIModel = {"Cards" : [this.packAPICard(card)]};
 
