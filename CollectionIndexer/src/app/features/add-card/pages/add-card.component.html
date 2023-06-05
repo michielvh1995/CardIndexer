@@ -4,10 +4,13 @@
       <label for="card-name">card name: </label>
       <input id="card-name" #cardName placeholder="name">
       <input id="card-set" #cardSet placeholder="Set">
+      <input id="card-count" #cardCount placeholder="Count" type="number">
+      <input id="card-foil" #cardFoil type ="checkbox">
+      <label for="card-foil">foil</label>
     </div>
   </span>
 
-  <button type="button" class="add-button" (click)="add(cardName.value); cardName.value=''">
+  <button type="button" class="add-button" (click)="add(cardName.value, cardSet.value, cardCount.value, cardFoil.checked); cardName.value=''">
       Add card
     </button>
 </div>

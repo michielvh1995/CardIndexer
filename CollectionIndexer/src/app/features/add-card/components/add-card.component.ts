@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
 import { CollectedbService } from 'src/app/shared/collecteDB/collectedb.service';
-import { APICard } from 'src/app/shared/models/api';
+import { APICard, CardVersion } from 'src/app/shared/models/api';
 
 @Component({
   selector: 'app-add-card',
@@ -22,13 +22,21 @@ export class AddCardComponent {
     
   }
   
-
-  add(name: string): void {
+  add(name: string, cardSet: string, cardCount:string, foil:boolean, multiverseID:number = 0): void {
     name = name.trim();
+    cardSet = cardSet.trim();
+    icount = 1;
+
+    var icount = 0;
     if (!name) { return; }
+    // seeing how cardCount unfortunately is not a number, we need to parse it
+    if (cardCount) { icount = +cardCount; } 
+
+    let cardVer : CardVersion = {"card_count" : icount, "foil" : foil, "multiverseID" : multiverseID};
+
+    if (cardSet) {cardVer["set_code"] = cardSet; }
     
-    let cardVers = [{"card_count" : 1}];
-    this.collecteDBService.postNewCard({ name, "versions" : cardVers } as APICard).subscribe(hero => {
+    this.collecteDBService.postNewCard({ name, "versions" : [cardVer] } as APICard).subscribe(hero => {
       this.goBack();
     });
   }
