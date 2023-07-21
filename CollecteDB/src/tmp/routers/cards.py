@@ -1,7 +1,30 @@
 from typing import List, Annotated
 from fastapi import APIRouter, Body
 
+from .mockdatabase import mock_cards_data
+
 from ..models import Card, CardVersion
+
+def ExportData(cards : List[Card]) -> None:
+    print("exporting")
+    with open('./src/tmp/routers/mockdatabase.py', 'w') as fil:
+        imports = ["from typing import List\n","from ..models import Card, CardVersion", '\n\n']
+        fil.writelines(imports)
+        fil.write("mock_cards_data : List[Card] = [\n")
+
+        # 
+        for card in cards:
+            cardVerStr = [f"CardVersion(card_count={ver.card_count}{f', foil = {ver.foil}' if ver.foil else ''}{f', multiverseID={ver.multiverseID}' if ver.multiverseID else ''})" for ver in card.versions]
+            cardStr = f"   Card(name='{card.name}', internal_id = {card.internal_id}, versions=[{(', ').join(cardVerStr)}]),\n"
+            fil.write(cardStr)
+
+        fil.write(']')
+        fil.close()
+
+# ============================================================================================================================================================
+# ============================================================================================================================================================
+# ============================================================================================================================================================
+
 
 router = APIRouter(
     prefix="/cards",
@@ -9,21 +32,6 @@ router = APIRouter(
     responses={404: {"Description": "Not found"}},
 )
 
-
-mock_cards_data : List[Card] = [
-    Card(name = "rings of brighthearth", internal_id= 0, versions=[CardVersion(card_count=1, foil=False, multiverseID=420608)] ),
-    Card(name ="sylvan caryatid", internal_id= 1, versions=[CardVersion(card_count = 1)]),
-    Card(name ="phyrexian swarmlord", internal_id= 2, versions=[CardVersion(multiverseID = 218086)]),
-    Card(name ="deafening silence", internal_id= 3, versions=[CardVersion(card_count = 1)]),
-    Card(name ="crashing drawbridge", internal_id= 4, versions=[CardVersion(card_count = 1)]),
-    Card(name ="roving keep", internal_id= 5, versions=[CardVersion(card_count = 1)]),
-    Card(name ="pia nalaar", internal_id= 6, versions=[CardVersion(card_count = 1)]),
-    Card(name ="jaya, venerated firemage", internal_id= 7, versions=[CardVersion(card_count = 1)]),
-    Card(name ="force of despair", internal_id= 8, versions=[CardVersion(card_count = 1)]),
-    Card(name ="asylum visitor", internal_id= 9, versions=[CardVersion(card_count = 1)]),
-    Card(name ="liliana dreadhorde general", internal_id= 10, versions=[CardVersion(card_count = 1)]),
-    Card(name ="ob nixilis, the hate-twisted", internal_id= 11, versions=[CardVersion(card_count = 1)])
-]
 
 def SearchForCardbyName(name : str, fields : List | None = None) -> tuple[bool, Card| None]:
     """ This function searches the database for the named card. 
@@ -69,6 +77,11 @@ def AddNewCard(copy : Card) -> Card:
     return copy
 
 
+# DEBUG
+@router.get("/storeCollection")
+async def printDictionary():
+    ExportData(mock_cards_data)
+    return {f"Stored {len(mock_cards_data)} cards to file"}
 
 # Cards API endpoints:
 
@@ -160,4 +173,7 @@ async def update_card_by_ID(card_id : int, new_values : Annotated[Card, Body()])
             updated_fields.append(key)
             mock_cards_data[card_id][key] = value
 
+    
+
     return {"updated" : updated_fields}
+

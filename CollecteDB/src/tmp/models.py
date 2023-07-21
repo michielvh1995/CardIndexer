@@ -18,6 +18,9 @@ class Card(BaseModel):
     internal_id : int | None
     versions : List[CardVersion]
 
+    def __str__():
+        return "add"
+
 # {"Cards":[{"name":"asdfasdf","versions":[{"card_count":1}]}]}
 
 # class CardVersion(BaseModel):
