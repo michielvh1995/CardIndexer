@@ -4,6 +4,8 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AddCardComponent } from './add-card/components/add-card.component';
 import { CardComponent } from './card/components/card.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from '../shared/shared.module';
 
 
 
@@ -15,6 +17,9 @@ import { CardComponent } from './card/components/card.component';
   imports: [
     CommonModule,
     HttpClientModule,
+    SharedModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class FeaturesModule { }

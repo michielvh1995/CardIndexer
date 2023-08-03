@@ -2,8 +2,8 @@
   <span class = "carddetails">
     <div>
       <label for="card-name">card name: </label>
-      <input id="card-name" #cardName placeholder="name">
       <input id="card-set" #cardSet placeholder="Set">
+      <input id="card-name" #cardName placeholder="name">
       <input id="card-count" #cardCount placeholder="Count" type="number">
       <input id="card-foil" #cardFoil type ="checkbox">
       <label for="card-foil">foil</label>
@@ -11,9 +11,26 @@
   </span>
 
   <button type="button" class="add-button" (click)="add(cardName.value, cardSet.value, cardCount.value, cardFoil.checked); cardName.value=''">
-      Add card
-    </button>
+    Add card
+  </button>
 </div>
 
-<button type="button" (click)="goBack()">Cancel</button>
 
+<div class="cardcontainer">
+  <span class = "carddetails">
+    <p>Card search:</p>
+    <form [formGroup]="cardSelectorForm" (ngSubmit)="onCardSearch()">
+      <input id="card-name" placeholder="Name" type ="text" formControlName="cardNameControl">
+
+      <input id="card-set" placeholder="Set" type ="text" formControlName="cardSetControl">
+      
+      <button type="submit" [disabled]="!cardSelectorForm.valid">Search</button>
+    </form>
+  </span>
+</div>
+
+<div *ngIf="queriedCards">
+  <span *ngFor="let card of queriedCards">
+    <img class="carddisplay" src="https://api.scryfall.com/cards/{{card.set_code}}/{{card.number}}?format=image"/>
+  </span>
+</div>

@@ -10,6 +10,8 @@ import { CardDetailComponent } from '../card-detail/card-detail.component';
 import { MessagesComponent } from '../shared/messages/components/messages.component';
 import { AppRoutingModule } from './app-routing.module';
 import { DashboardComponent } from '../features/dashboard/components/dashboard.component';
+import { SharedModule } from '../shared/shared.module';
+import { FeaturesModule } from '../features/features.module';
 
 
 @NgModule({
@@ -24,7 +26,9 @@ import { DashboardComponent } from '../features/dashboard/components/dashboard.c
     BrowserModule,
     FormsModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    SharedModule,
+    FeaturesModule
   ],
   providers: [],
   bootstrap: [AppComponent]
