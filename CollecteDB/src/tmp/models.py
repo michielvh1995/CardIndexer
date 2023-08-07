@@ -11,6 +11,11 @@ class CardVersion(BaseModel):
     foil : bool = False
     multiverseID : int | None = None    # We need an index on this field
     set_code : str | None = None
+    number: str | None = None
+
+    def __eq__(self, other):
+        return self.number == other.number and self.set_code == other.set_code and self.foil == other.foil
+
 
 # Base model for the cards, currently using a legacy version as this is currently in use with the front end as well 
 class Card(BaseModel):

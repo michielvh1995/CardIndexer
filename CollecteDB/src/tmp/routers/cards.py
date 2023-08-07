@@ -3,7 +3,7 @@ from fastapi import APIRouter, Body
 
 from .mockdatabase import mock_cards_data
 
-from ..models import Card, CardVersion
+from ..models import Card
 
 def ExportData(cards : List[Card]) -> None:
     print("exporting")
@@ -45,6 +45,7 @@ def SearchForCardbyName(name : str, fields : List | None = None) -> tuple[bool, 
 def AddCopiesofCard(name : str, copy : Card) -> Card:
     """ This function adds a copy of a card to the database.
     """
+
     for card in mock_cards_data:
         if card.name == name:
 
@@ -52,17 +53,17 @@ def AddCopiesofCard(name : str, copy : Card) -> Card:
             # To check whether or not it is present and updated, we use the updated variable
         
 
-            # Cards with the same multiverse ID can either be foil or not
-            for version in card.versions:
+            # Then we check if the version of the card is already in the database
+            for copyVersion in copy.versions:
                 updated : bool = False
                 
-                for copyVersion in copy.versions:
-                    if version.multiverseID == copyVersion.multiverseID and version.foil == copyVersion.foil:
+                for version in card.versions:
+                    if copyVersion == version:
                         version.card_count += copyVersion.card_count
                         updated = True
             
                 if not updated:
-                    card.versions.append(copy)
+                    card.versions.append(copyVersion)
                 
             return card
                 
@@ -145,6 +146,7 @@ async def add_card(
 
     for card in Cards:
         search = SearchForCardbyName(card.name)
+        print("Processing card:", card.name, card.versions[0].set_code,card.versions[0].number)
 
         # If the card is present in the database we add the new copies
         # and if it is a new card we create a new entry

@@ -16,4 +16,6 @@ mock_cards_data : List[Card] = [
    Card(name='ob nixilis, the hate-twisted', internal_id = 11, versions=[CardVersion(card_count=1)]),
    Card(name='Elesh Norn, Mother of Machines', internal_id = 14, versions=[CardVersion(card_count=1)]),
    Card(name='Bilbo, Adventurous Hobbit', internal_id = 15, versions=[CardVersion(card_count=4)]),
+   Card(name='Grizzly Bears', internal_id = 16, versions=[CardVersion(card_count=1, multiverseID=129586)]),
+   Card(name='Plains', internal_id = 17, versions=[CardVersion(card_count=1, multiverseID=129680), CardVersion(card_count=1, multiverseID=129681), CardVersion(card_count=1, multiverseID=129682), CardVersion(card_count=1, multiverseID=129683), CardVersion(card_count=1, multiverseID=11446), CardVersion(card_count=1), CardVersion(card_count=1, multiverseID=11447), CardVersion(card_count=1), CardVersion(card_count=1, multiverseID=11448), CardVersion(card_count=1), CardVersion(card_count=1, multiverseID=11449), CardVersion(card_count=1)]),
 ]
