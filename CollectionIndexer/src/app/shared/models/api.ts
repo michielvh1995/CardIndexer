@@ -1,5 +1,5 @@
 export interface APICard {
-    internal_id: number;
+    internal_id?: number;
     name: string;
 
     versions : CardVersion[];
@@ -11,7 +11,7 @@ export interface CardVersion {
     // These are the properties maintained by wizards of the coast
     multiverseID?: number;
     set_code? : string;
-    number? : number;
+    number? : string;
 
     // This is information regarding the cards themselves
     location? : string;

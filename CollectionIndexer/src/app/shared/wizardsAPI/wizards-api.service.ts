@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { MessageService } from '../messages/services/message.service';
 import { Observable, catchError, of, map, tap } from 'rxjs';
 import { Card } from '../models/card';
+import { APICard, CardVersion } from '../models/api';
 
 @Injectable({
   providedIn: 'root'
@@ -26,36 +27,30 @@ export class WizardsAPIService {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
 
-    castAPIIntoCardObjects(fetchedCards : wizardsAPICardObject) {
+    castIntoAPICardObjects(fetchedCards : wizardsAPICardObject) {
       var cardsArray = [];
       for (let i = 0; i < fetchedCards.cards.length; i++) {
         const card = fetchedCards.cards[i];
 
         console.log(`${card.set}, ${card.number}`); // DEBUG
 
-        cardsArray.push({
-          "internal_id" : 1000 + card.number,
-          "name": card.name,
-          "multiverseID" : card.multiverseid,
+        var version = {
+          "card_count": 1,
+          // These are the properties maintained by wizards of the coast
+          "multiverseID": card.multiverseid,
           "set_code" : card.set.toLowerCase(),
-          "number" : card.number
+          "number" : `${card.number}`
+        } as CardVersion
+
+        cardsArray.push({
+          "name": card.name,
+          "versions" : [version]
         })
       }
-      return cardsArray as Card[];
+      return cardsArray as APICard[];
     }
 
-    // TODO: Rewrite this function, to be more consistent with what card prototype is being used
-    getMultiverseIDByNameAndSet(name? : string, set? : string) {
-      var querystring = `?name=${name}&set=${set}`
-
-      this.log(`${this.apiURL}${querystring}`);
-      return this.http.get<wizardsAPICardObject>(`${this.apiURL}${querystring}`)
-      .pipe(
-        catchError(this.handleError("Get multiverseID by name and set", {"cards":[]})),
-        tap(fetched => this.log(`${fetched.cards.length} cards from wizards`)),
-      )
-    }
-
+    // Uses the correct API card format
     queryCardsByNameAndSet(name? : string, set? : string) {
       var querystring = `?name=${name}&set=${set}`
 
@@ -65,10 +60,9 @@ export class WizardsAPIService {
         .pipe(
           catchError(this.handleError("Get multiverseID by name and set", [])),
           tap(fetched => this.log(`${fetched.cards.length} cards from wizards`)),
-          map(fetched => this.castAPIIntoCardObjects(fetched))
+          map(fetched => this.castIntoAPICardObjects(fetched))
         )
     }
-
 
 
     private handleError<T>(operation = 'default operation', result?: T){

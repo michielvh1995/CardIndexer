@@ -150,9 +150,14 @@ export class CollectedbService {
     }
 
     // This function can be used to post a single new card to the server
-    postNewCards(cards : [APICard]) : Observable<CardsAPIModel> {
+    postNewCards(cards : APICard[]) : Observable<CardsAPIModel> {
       this.log(`Posting ${cards.length} cards`);
       let cardWrapper : CardsAPIModel = {"Cards" : cards };
+
+
+      console.log("POSTING FROM THE COLLECTEDBSERVICE:");
+      console.log(JSON.stringify(cardWrapper));
+
       
       return this.http.post<CardsAPIModel>(`${this.apiURL}cards/new/`, cardWrapper, this.httpOptions).pipe(
         map(newCards => newCards.Cards),
@@ -160,20 +165,6 @@ export class CollectedbService {
         catchError(this.handleError<any>('PostNewCards'))
       );
     }
-
-    // Currently I use a jank-ass packing function to wrap cards into the new API format
-    // The rest of the program will have to be rewritten to use the better format
-    postNewCardOLD(card : Card) : Observable<Card> {
-      this.log(`Card to be posted: ${card.card_count}`)
-      let cardWrapper : CardsAPIModel = {"Cards" : [this.packAPICard(card)]};
-
-      return this.http.post<CardsAPIModel>(`${this.apiURL}cards/new/`, cardWrapper, this.httpOptions).pipe(
-        map(newCards => newCards.Cards[0]),
-        tap(newCards => this.log(`Added ${newCards.name}`)),
-        catchError(this.handleError<any>('PostNewCard'))
-      );
-    }
-    
 
     private handleError<T>(operation = 'default operation', result?: T){
       return (error: any): Observable<T> => {

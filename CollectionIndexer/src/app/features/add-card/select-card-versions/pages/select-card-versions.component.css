@@ -1,0 +1,46 @@
+.carddetails {
+    display: block;
+    position: relative;
+    text-align: left;
+    left: 0;
+    top: 0;
+    /* background-color: red; */
+}
+
+label {
+  color: #435960;
+  font-weight: bold;
+}
+
+input {
+    font-size: 1em;
+    padding: .5rem;
+}
+button {
+  margin-top: 10px;
+  background-color: #eee;
+  padding: .5rem;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+button:hover {
+  background-color: #cfd8dc;
+}
+button:disabled {
+  background-color: #eee;
+  color: #ccc;
+  cursor: auto;
+}
+
+
+
+.imgcontainer {
+    display: inline-block;
+    position: right;
+}
+
+.carddisplay {
+    width: 265px;
+    height: 370px;
+}
