@@ -33,14 +33,7 @@ button:disabled {
   cursor: auto;
 }
 
-
-
-.imgcontainer {
-    display: inline-block;
-    position: right;
-}
-
-.carddisplay {
-    width: 265px;
-    height: 370px;
+.card-version-selection {
+  margin-top: 0.4em;
+  margin-left: 0.4em;
 }

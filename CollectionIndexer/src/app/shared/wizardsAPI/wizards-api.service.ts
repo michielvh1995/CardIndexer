@@ -35,7 +35,7 @@ export class WizardsAPIService {
         console.log(`${card.set}, ${card.number}`); // DEBUG
 
         var version = {
-          "card_count": 1,
+          "card_count": 0,
           // These are the properties maintained by wizards of the coast
           "multiverseID": card.multiverseid,
           "set_code" : card.set.toLowerCase(),

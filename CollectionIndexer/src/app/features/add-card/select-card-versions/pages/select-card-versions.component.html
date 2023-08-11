@@ -7,13 +7,16 @@
             <input id="card-set" placeholder="Set" type ="text" formControlName="cardSetControl">
         
             <button type="submit" [disabled]="!cardSelectorForm.valid" >Search</button>  
-            <button class="add-button" [disabled]="!selectedCards" (click)="addSelection()">+</button>
+            <button class="add-button" (click)="addSelection()">+</button>
           </form>
         
           <div class="card-version-selection" *ngIf="queriedCards">
+            <p *ngIf="queriedCards.length==0">No cards found</p>
+
             <span *ngFor="let card of queriedCards">
-              <img class="carddisplay" src="https://api.scryfall.com/cards/{{card.versions[0].set_code}}/{{card.versions[0].number}}?format=image"/>
+                <app-card-selector [card]="card"></app-card-selector>
             </span>
+
           </div>
     </div>
     <div *ngIf="submitted">

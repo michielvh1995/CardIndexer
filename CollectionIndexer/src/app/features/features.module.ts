@@ -6,6 +6,7 @@ import { AddCardComponent } from './add-card/components/add-card.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { SelectCardVersionsComponent } from './add-card/select-card-versions/components/select-card-versions.component';
+import { CardSelectorComponent } from './add-card/card-selector/components/card-selector.component';
 
 
 
@@ -13,6 +14,7 @@ import { SelectCardVersionsComponent } from './add-card/select-card-versions/com
   declarations: [
     AddCardComponent,
     SelectCardVersionsComponent,
+    CardSelectorComponent,
   ],
   imports: [
     CommonModule,
