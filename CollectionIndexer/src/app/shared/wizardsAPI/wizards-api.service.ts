@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MessageService } from '../messages/services/message.service';
 import { Observable, catchError, of, map, tap } from 'rxjs';
-import { Card } from '../models/card';
 import { APICard, CardVersion } from '../models/api';
 
 @Injectable({

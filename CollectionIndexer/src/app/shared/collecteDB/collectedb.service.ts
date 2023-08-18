@@ -58,7 +58,8 @@ export class CollectedbService {
           "card_count": version.card_count,
           "multiverseID" : version.multiverseID,
           "set_code" : version.set_code,
-          "foil" : version.foil
+          "foil" : version.foil,
+          "number": version.number
         });
       }
       return unpacked as Card[];
