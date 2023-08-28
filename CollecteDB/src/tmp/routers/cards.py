@@ -3,6 +3,8 @@ from fastapi import APIRouter, Body
 
 from .mockdatabase import mock_cards_data
 
+from ..database import Database
+
 from ..models import Card
 
 def ExportData(cards : List[Card]) -> None:
@@ -14,7 +16,7 @@ def ExportData(cards : List[Card]) -> None:
 
         # 
         for card in cards:
-            cardVerStr = [f"CardVersion(card_count={ver.card_count}{f', foil = {ver.foil}' if ver.foil else ''}{f', multiverseID={ver.multiverseID}' if ver.multiverseID else ''})" for ver in card.versions]
+            cardVerStr = [f"CardVersion(card_count={ver.card_count}{f', set_code={ver.set_code}' if ver.set_code else ''}{f', number={ver.number}' if ver.number else ''}{f', foil = {ver.foil}' if ver.foil else ''}{f', multiverseID={ver.multiverseID}' if ver.multiverseID else ''})" for ver in card.versions]
             cardStr = f"   Card(name='{card.name}', internal_id = {card.internal_id}, versions=[{(', ').join(cardVerStr)}]),\n"
             fil.write(cardStr)
 
@@ -32,57 +34,11 @@ router = APIRouter(
     responses={404: {"Description": "Not found"}},
 )
 
-
-def SearchForCardbyName(name : str, fields : List | None = None) -> tuple[bool, Card| None]:
-    """ This function searches the database for the named card. 
-    It then returns whether or not it exists and, if present, it's data.
-    """
-    for card in mock_cards_data:
-        if card.name == name:
-            return (True, card)
-    return (False, None)
-
-def AddCopiesofCard(name : str, copy : Card) -> Card:
-    """ This function adds a copy of a card to the database.
-    """
-
-    for card in mock_cards_data:
-        if card.name == name:
-
-            # Here we either add more cards of the version we already have, to add a new version
-            # To check whether or not it is present and updated, we use the updated variable
-        
-
-            # Then we check if the version of the card is already in the database
-            for copyVersion in copy.versions:
-                updated : bool = False
-                
-                for version in card.versions:
-                    if copyVersion == version:
-                        version.card_count += copyVersion.card_count
-                        updated = True
-            
-                if not updated:
-                    card.versions.append(copyVersion)
-                
-            return card
-                
-    
-
-def AddNewCard(copy : Card) -> Card:
-    """ This function adds a new not-yet existing card to the database
-    """
-    internal_id = len(mock_cards_data) + 2
-    copy.internal_id = internal_id
-    mock_cards_data.append(copy)
-    return copy
-
-
 # DEBUG
 @router.get("/storeCollection")
 async def printDictionary():
-    ExportData(mock_cards_data)
-    return {f"Stored {len(mock_cards_data)} cards to file"}
+    ExportData(Database.GetAll())
+    return {f"Stored the collection to file"}
 
 # Cards API endpoints:
 
@@ -92,36 +48,31 @@ async def printDictionary():
 async def get_card_locations(card_name:str):
     return { "name": card_name, "loc": [{"location": "name", "count": 0}]}
 
-# Returns how many of a specific card are in the collection
-@router.get("/count/{card_name}")
-async def get_card_count(card_name:str):
-    return { "name": card_name, "count": 0}
-
-# Returns a list of all the card names in the collection
+# Returns the collection
 @router.get("/all")
 async def get_all_cards():
-    return {"Cards" : mock_cards_data}
+    cardsData = Database.GetAll()
+    cards = [cardsData[key] for key in cardsData.keys()]
+
+    return {"Cards" : cards}
 
 # Returns all information regarding a card in the collection
 @router.get("/{card_name}")
 async def get_cards(card_name:str):
-    return { }
+    return {"Cards": Database.QueryByName(card_name) }
 
 @router.get("")
 async def get_cards(
         name : str | None = None,
+        set : str | None = None,
+        number: str | None = None,
         multiverseID : int | None = None,
-        internal_id : int | None = None,
         foil : bool = False
     ):
-
-    filters = locals()
 
     # Filterfunction used to filter the mock database based on the query variables
     def filterFunc(card : Card):
         if name is not None and not card.name == name:
-            return False
-        if internal_id is not None and not card.internal_id == internal_id:
             return False
         
         if multiverseID is not None and not multiverseID in [vers.multiverseID for vers in card.versions]:
@@ -142,20 +93,8 @@ async def add_card(
         Cards : Annotated[List[Card], Body(embed = True)]
     ):
     print("post: new", Cards)
-    updated = []
 
-    for card in Cards:
-        search = SearchForCardbyName(card.name)
-        print("Processing card:", card.name, card.versions[0].set_code,card.versions[0].number)
-
-        # If the card is present in the database we add the new copies
-        # and if it is a new card we create a new entry
-        if search[0]:
-            updated.append(AddCopiesofCard(card.name, card))
-        else:
-            updated.append(AddNewCard(card))
-
-    return {"Cards": updated}
+    return {"Cards": Database.InsertCards(cards=Cards)}
 
 @router.post("/move/{card_name}")
 async def move_card(card_name:str):
@@ -164,18 +103,3 @@ async def move_card(card_name:str):
 @router.post("/{card_name}")
 async def update_card(card_name:str):
     return {}
-
-
-@router.put("/updatebyID/{card_id}")
-async def update_card_by_ID(card_id : int, new_values : Annotated[Card, Body()]):
-    updated_fields : List[str] = []
-
-    for key, value in iter(new_values):
-        if value is not None and mock_cards_data[card_id][key] != value:
-            updated_fields.append(key)
-            mock_cards_data[card_id][key] = value
-
-    
-
-    return {"updated" : updated_fields}
-
