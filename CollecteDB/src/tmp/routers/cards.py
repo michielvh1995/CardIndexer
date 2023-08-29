@@ -1,3 +1,4 @@
+import json
 from typing import List, Annotated
 from fastapi import APIRouter, Body
 
@@ -7,26 +8,11 @@ from ..database import Database
 
 from ..models import Card
 
-def ExportData(cards : List[Card]) -> None:
-    print("exporting")
-    with open('./src/tmp/routers/mockdatabase.py', 'w') as fil:
-        imports = ["from typing import List\n","from ..models import Card, CardVersion", '\n\n']
-        fil.writelines(imports)
-        fil.write("mock_cards_data : List[Card] = [\n")
 
-        # 
-        for card in cards:
-            cardVerStr = [f"CardVersion(card_count={ver.card_count}{f', set_code={ver.set_code}' if ver.set_code else ''}{f', number={ver.number}' if ver.number else ''}{f', foil = {ver.foil}' if ver.foil else ''}{f', multiverseID={ver.multiverseID}' if ver.multiverseID else ''})" for ver in card.versions]
-            cardStr = f"   Card(name='{card.name}', internal_id = {card.internal_id}, versions=[{(', ').join(cardVerStr)}]),\n"
-            fil.write(cardStr)
 
-        fil.write(']')
-        fil.close()
-
-# ============================================================================================================================================================
-# ============================================================================================================================================================
-# ============================================================================================================================================================
-
+# ================================================================================
+# ================================================================================
+# ================================================================================
 
 router = APIRouter(
     prefix="/cards",
@@ -37,7 +23,6 @@ router = APIRouter(
 # DEBUG
 @router.get("/storeCollection")
 async def printDictionary():
-    ExportData(Database.GetAll())
     return {f"Stored the collection to file"}
 
 # Cards API endpoints:
@@ -74,15 +59,15 @@ async def get_cards(
     def filterFunc(card : Card):
         if name is not None and not card.name == name:
             return False
-        
+
         if multiverseID is not None and not multiverseID in [vers.multiverseID for vers in card.versions]:
             return False
-        
+
         if foil and not foil in [vers.foil for vers in card.versions]:
             return False
-        
+
         return True
-    
+
     # DEBUG: print the results of the query
     print(list(filter(filterFunc, mock_cards_data)))
     return { "Cards" : list(filter(filterFunc, mock_cards_data)) }

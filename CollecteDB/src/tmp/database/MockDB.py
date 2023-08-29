@@ -1,3 +1,4 @@
+import json
 from .base import DatabaseEngine
 
 from ..models import Card
@@ -9,8 +10,9 @@ class MockEngine(DatabaseEngine):
     @classmethod
     def InitDatabase(cls, **kwargs):
         cards = kwargs.get('cards', {})
-        for card in cards:
-            cls.Data[card.name] = card
+        
+        for key in cards.keys():
+            cls.Data[key] = Card.from_dict(cards[key])
 
     @classmethod
     def InsertCards(cls, cards: list[Card]) -> list[Card]:
@@ -27,7 +29,11 @@ class MockEngine(DatabaseEngine):
                 updated.append(cls.Data[card.name])
 
         return updated
-    
+
+    @classmethod
+    def QueryCards(cls, filters : dict[str, any]):
+        return cls.QueryCards(filters)
+
     @classmethod
     def QueryByName(cls, name: str):
         if name in cls.Data.keys():
@@ -37,4 +43,16 @@ class MockEngine(DatabaseEngine):
     @classmethod
     def GetAll(cls):
         return cls.Data
+    
+    @classmethod
+    def ExportData(cls) -> None:
+        cardsData = cls.GetAll()
+        dictionized = {}
+        for card in [cardsData[key] for key in cardsData.keys()]:
+            dictionized[card.name] = card.to_json()
+
+        with open('./src/tmp/cardsdata.json', 'w') as fil:
+            json.dump(dictionized, fil, indent=2)
+        
+        print("stored data")
 

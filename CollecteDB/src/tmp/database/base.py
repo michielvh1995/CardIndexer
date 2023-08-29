@@ -13,6 +13,10 @@ class Database:
     @classmethod    
     def InsertCards(cls, cards: list[Card]) -> list[Card]:
         return cls.Engine.InsertCards(cards)
+    
+    @classmethod
+    def QueryCards(cls, filters : dict[str, any]):
+        return cls.Engine.QueryCards(filters)
 
     @classmethod    
     def QueryByName(cls, name : str) -> list[Card]:
@@ -21,6 +25,10 @@ class Database:
     @classmethod
     def GetAll(cls) -> list[Card]:
         return cls.Engine.GetAll()
+
+    @classmethod
+    def ExportData(cls):
+        return cls.Engine.ExportData()
 
 
 class DatabaseEngine:
@@ -35,6 +43,10 @@ class DatabaseEngine:
     def InsertCards(cls, cards: list[Card]) -> list[Card]:
         return cls.InsertCards(cards)
 
+    @classmethod
+    def QueryCards(cls, filters : dict[str, any]):
+        return cls.QueryCards(filters)
+
     @classmethod    
     def QueryByName(cls, name : str):
         return cls.QueryByName(name)
@@ -42,3 +54,7 @@ class DatabaseEngine:
     @classmethod
     def GetAll(cls):
         return cls.GetAll()
+    
+    @classmethod
+    def ExportData(cls):
+        return cls.ExportData()
