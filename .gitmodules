@@ -1,0 +1,3 @@
+[submodule "CollectionIndexer"]
+	path = CollectionIndexer
+	url = git@github.com:michielvh1995/CollectionIndexer.git
