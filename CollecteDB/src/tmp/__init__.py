@@ -14,8 +14,12 @@ from .routers import cards, decks
 
 def LoadDataFromJSON():
     cardData = {}
-    with open('./src/tmp/cardsdata.json', 'r') as fil:
-        cardData = json.load(fil)
+
+    try:
+        with open('./src/tmp/cardsdata.json', 'r+') as fil:
+            cardData = json.load(fil)
+    except:
+        pass
     
     return cardData
 
