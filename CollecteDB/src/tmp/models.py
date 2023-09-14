@@ -35,10 +35,10 @@ class CardVersion(BaseModel):
                             set_code = set_code,
                             number = number)
 
-    def __eq__(self, other):
+    def __eq__(self, other : CardVersion):
         return self.foil == other.foil and ((self.number == other.number and self.set_code == other.set_code) or self.multiverseID == other.multiverseID )
     
-    def __add__(self, other):
+    def __add__(self, other : CardVersion):
         if not self == other:
             raise Exception("Not adding copies of the same card!")
         
@@ -47,8 +47,8 @@ class CardVersion(BaseModel):
         # And then we update the multiverse IDs etc, for data completeness
         if self.number is None and other.number is not None:
             self.number = other.number
-        if self.set  is None and other.set is not None:
-            self.set = other.set
+        if self.set_code is None and other.set_code is not None:
+            self.set_code = other.set_code
         if self.multiverseID is None and other.multiverseID is not None:
             self.multiverseID = other.multiverseID
 
@@ -82,6 +82,10 @@ class Card(BaseModel):
         return self.name == other.name
     
     def __add__(self, other : Card):
+        """ You can only add cards of the same name together.
+        This then adds all the versions of that card to the versions of the other card, increasing each of their counts.
+        If a CardVersion is not present in the one, but it is in the other, it gets added to the list of CardVersions.
+        """
         if not self == other:
             raise Exception("Not adding copies of the same card!")
         

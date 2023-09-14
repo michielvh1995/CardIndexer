@@ -1,6 +1,5 @@
-import json
 from typing import List, Annotated
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Response
 
 from .mockdatabase import mock_cards_data
 
@@ -81,6 +80,15 @@ async def add_card(
 
     return {"Cards": Database.InsertCards(cards=Cards)}
 
+@router.options("/new/")
+async def allow_localhost(response: Response):
+    print("OPTIONS REQUEST")
+    response.headers["Access-Control-Allow-Origin"] = 'http://localhost:4200'
+    return {
+        "Access-Control-Allow-Origin" : 'http://localhost:4200' ,
+        "Access-Control-Allow-Methods" : 'POST, OPTIONS'
+    }
+
 @router.post("/move/{card_name}")
 async def move_card(card_name:str):
     return {}
@@ -88,3 +96,5 @@ async def move_card(card_name:str):
 @router.post("/{card_name}")
 async def update_card(card_name:str):
     return {}
+
+

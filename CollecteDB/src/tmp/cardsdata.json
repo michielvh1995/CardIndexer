@@ -294,5 +294,365 @@
         "number": "275"
       }
     ]
+  },
+  "Ragavan, Nimble Pilferer": {
+    "name": "Ragavan, Nimble Pilferer",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 0,
+        "foil": false,
+        "multiverseID": 522214,
+        "set_code": "mh2",
+        "number": "138"
+      },
+      {
+        "card_count": 4,
+        "foil": true,
+        "multiverseID": 522214,
+        "set_code": "mh2",
+        "number": "138"
+      },
+      {
+        "card_count": 1,
+        "foil": true,
+        "multiverseID": 611326,
+        "set_code": "mul",
+        "number": "21"
+      },
+      {
+        "card_count": 4,
+        "foil": true,
+        "multiverseID": null,
+        "set_code": "mul",
+        "number": "86"
+      }
+    ]
+  },
+  "Atraxa, Praetors' Voice": {
+    "name": "Atraxa, Praetors' Voice",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 6,
+        "foil": true,
+        "multiverseID": 491362,
+        "set_code": "2xm",
+        "number": "353"
+      }
+    ]
+  },
+  "Rashmi and Ragavan": {
+    "name": "Rashmi and Ragavan",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 9,
+        "foil": true,
+        "multiverseID": 614674,
+        "set_code": "moc",
+        "number": "94"
+      }
+    ]
+  },
+  "Johnny, Combo Player": {
+    "name": "Johnny, Combo Player",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 6,
+        "foil": true,
+        "multiverseID": 479419,
+        "set_code": "und",
+        "number": "23"
+      },
+      {
+        "card_count": 12,
+        "foil": true,
+        "multiverseID": 74271,
+        "set_code": "unh",
+        "number": "35"
+      }
+    ]
+  },
+  "Akroma, Vision of Ixidor": {
+    "name": "Akroma, Vision of Ixidor",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 1,
+        "foil": true,
+        "multiverseID": 497522,
+        "set_code": "cmr",
+        "number": "2"
+      }
+    ]
+  },
+  "Banish from Edoras": {
+    "name": "Banish from Edoras",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 1,
+        "foil": true,
+        "multiverseID": null,
+        "set_code": "ltr",
+        "number": "1"
+      }
+    ]
+  },
+  "The Battle of Bywater": {
+    "name": "The Battle of Bywater",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 1,
+        "foil": true,
+        "multiverseID": null,
+        "set_code": "ltr",
+        "number": "2"
+      }
+    ]
+  },
+  "Bill the Pony": {
+    "name": "Bill the Pony",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 1,
+        "foil": true,
+        "multiverseID": null,
+        "set_code": "ltr",
+        "number": "3"
+      }
+    ]
+  },
+  "Boromir, Warden of the Tower": {
+    "name": "Boromir, Warden of the Tower",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 1,
+        "foil": true,
+        "multiverseID": null,
+        "set_code": "ltr",
+        "number": "4"
+      },
+      {
+        "card_count": 1,
+        "foil": true,
+        "multiverseID": null,
+        "set_code": "ltr",
+        "number": "4"
+      }
+    ]
+  },
+  "D\u00fanedain Blade": {
+    "name": "D\u00fanedain Blade",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 3,
+        "foil": true,
+        "multiverseID": null,
+        "set_code": "ltr",
+        "number": "6"
+      }
+    ]
+  },
+  "Eagles of the North": {
+    "name": "Eagles of the North",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 1,
+        "foil": true,
+        "multiverseID": null,
+        "set_code": "ltr",
+        "number": "7"
+      }
+    ]
+  },
+  "Eastfarthing Farmer": {
+    "name": "Eastfarthing Farmer",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 1,
+        "foil": true,
+        "multiverseID": null,
+        "set_code": "ltr",
+        "number": "8"
+      }
+    ]
+  },
+  "East-Mark Cavalier": {
+    "name": "East-Mark Cavalier",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 1,
+        "foil": true,
+        "multiverseID": null,
+        "set_code": "ltr",
+        "number": "9"
+      }
+    ]
+  },
+  "\u00c9owyn, Lady of Rohan": {
+    "name": "\u00c9owyn, Lady of Rohan",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 1,
+        "foil": true,
+        "multiverseID": null,
+        "set_code": "ltr",
+        "number": "10"
+      }
+    ]
+  },
+  "Errand-Rider of Gondor": {
+    "name": "Errand-Rider of Gondor",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 1,
+        "foil": true,
+        "multiverseID": null,
+        "set_code": "ltr",
+        "number": "11"
+      }
+    ]
+  },
+  "Escape from Orthanc": {
+    "name": "Escape from Orthanc",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 1,
+        "foil": true,
+        "multiverseID": null,
+        "set_code": "ltr",
+        "number": "12"
+      }
+    ]
+  },
+  "Esquire of the King": {
+    "name": "Esquire of the King",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 1,
+        "foil": true,
+        "multiverseID": null,
+        "set_code": "ltr",
+        "number": "13"
+      }
+    ]
+  },
+  "Faramir, Field Commander": {
+    "name": "Faramir, Field Commander",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 1,
+        "foil": true,
+        "multiverseID": null,
+        "set_code": "ltr",
+        "number": "14"
+      }
+    ]
+  },
+  "Fog on the Barrow-Downs": {
+    "name": "Fog on the Barrow-Downs",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 1,
+        "foil": true,
+        "multiverseID": null,
+        "set_code": "ltr",
+        "number": "16"
+      }
+    ]
+  },
+  "Frodo, Sauron's Bane": {
+    "name": "Frodo, Sauron's Bane",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 1,
+        "foil": true,
+        "multiverseID": null,
+        "set_code": "ltr",
+        "number": "18"
+      }
+    ]
+  },
+  "Hobbit's Sting": {
+    "name": "Hobbit's Sting",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 1,
+        "foil": true,
+        "multiverseID": null,
+        "set_code": "ltr",
+        "number": "20"
+      }
+    ]
+  },
+  "Landroval, Horizon Witness": {
+    "name": "Landroval, Horizon Witness",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 1,
+        "foil": true,
+        "multiverseID": null,
+        "set_code": "ltr",
+        "number": "21"
+      }
+    ]
+  },
+  "Lost to Legend": {
+    "name": "Lost to Legend",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 1,
+        "foil": true,
+        "multiverseID": null,
+        "set_code": "ltr",
+        "number": "22"
+      }
+    ]
+  },
+  "Nimble Hobbit": {
+    "name": "Nimble Hobbit",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 6,
+        "foil": true,
+        "multiverseID": null,
+        "set_code": "ltr",
+        "number": "23"
+      }
+    ]
+  },
+  "Now for Wrath, Now for Ruin!": {
+    "name": "Now for Wrath, Now for Ruin!",
+    "internal_id": null,
+    "versions": [
+      {
+        "card_count": 2,
+        "foil": true,
+        "multiverseID": null,
+        "set_code": "ltr",
+        "number": "24"
+      }
+    ]
   }
 }

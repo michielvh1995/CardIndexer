@@ -2,7 +2,8 @@ USING_MONGO = False
 
 from contextlib import asynccontextmanager
 import json
-from fastapi import FastAPI, Query
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from beanie import init_beanie, Document
 from motor.motor_asyncio import AsyncIOMotorClient
 
@@ -33,6 +34,13 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 app.include_router(cards.router)
 
+# I hope this works 
+origins = [
+    "http://localhost:4200",
+    "http://localhost"
+    ]
+
+app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
 # app = FastAPI()
 # app.include_router(cards.router)
