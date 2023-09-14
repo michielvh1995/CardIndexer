@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 
 # Project specific data:
+src/tmp/cardsdata.json

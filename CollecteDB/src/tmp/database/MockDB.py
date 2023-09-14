@@ -51,7 +51,7 @@ class MockEngine(DatabaseEngine):
         for card in [cardsData[key] for key in cardsData.keys()]:
             dictionized[card.name] = card.to_json()
 
-        with open('./src/tmp/cardsdata.json', 'w') as fil:
+        with open('./src/tmp/cardsdata.json', 'w+') as fil:
             json.dump(dictionized, fil, indent=2)
         
         print("stored data")
