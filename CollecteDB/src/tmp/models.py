@@ -24,9 +24,9 @@ class CardVersion(BaseModel):
     @staticmethod
     def from_dict(obj: any) -> CardVersion:
         card_count  = obj.get("card_count")
-        foil  = obj.get("foil")
+        foil  = obj.get("foil", False)
         multiverseID  = obj.get("multiverseID")
-        set_code  = obj.get("set_code")
+        set_code  = str(obj.get("set_code"))
         number = obj.get("number")
 
         return CardVersion(card_count=card_count, 
@@ -36,29 +36,52 @@ class CardVersion(BaseModel):
                             number = number)
 
     def __eq__(self, other : CardVersion):
-        return self.foil == other.foil and ((self.number == other.number and self.set_code == other.set_code) or self.multiverseID == other.multiverseID )
+        return self.foil == other.foil and ((self.number == other.number and self.set_code == other.set_code) or (self.multiverseID is not None and other.multiverseID is not None and self.multiverseID == other.multiverseID) )
+
+    def __gt__(self, rhs : CardVersion):
+        if self.set_code > rhs.set_code: return True
+        elif self.number > rhs.number: return True
+        return self.foil > rhs.foil
+
+    def __lt__(self, rhs : CardVersion):
+        if self.set_code < rhs.set_code: return True
+        elif self.number < rhs.number: return True
+        return self.foil < rhs.foil
     
     def __add__(self, other : CardVersion):
         if not self == other:
             raise Exception("Not adding copies of the same card!")
         
-        self.card_count += other.card_count
+        card_count = self.card_count + other.card_count
         
         # And then we update the multiverse IDs etc, for data completeness
-        if self.number is None and other.number is not None:
-            self.number = other.number
-        if self.set_code is None and other.set_code is not None:
-            self.set_code = other.set_code
-        if self.multiverseID is None and other.multiverseID is not None:
-            self.multiverseID = other.multiverseID
+        number = None
+        if self.number is not None:
+            number = self.number
+        elif other.number is not None:
+            number = other.number
+        
+        set_code = None
+        if self.set_code is not None:
+            set_code = self.set_code
+        elif other.set_code is not None:
+            set_code = other.set_code
 
-        return self
+        multiverseID = None
+        if self.multiverseID is not None:
+            multiverseID = self.multiverseID
+        elif other.multiverseID is not None:
+            multiverseID = other.multiverseID
+
+        return CardVersion(card_count = card_count, set_code=set_code, number=number, multiverseID=multiverseID, foil=self.foil)
         
 # Base model for the cards, currently using a legacy version as this is currently in use with the front end as well 
 class Card(BaseModel):
     name : str                          # We need an index on this field
     internal_id : int | None
     versions : list[CardVersion]
+
+    __name__ = "Card"
 
     def to_json(self):
         return {
@@ -79,7 +102,7 @@ class Card(BaseModel):
         return f'{self.name}: {len(self.versions)} versions'
     
     def __eq__(self, other : Card):
-        return self.name == other.name
+        return self.name.lower() == other.name.lower()
     
     def __add__(self, other : Card):
         """ You can only add cards of the same name together.
@@ -89,18 +112,25 @@ class Card(BaseModel):
         if not self == other:
             raise Exception("Not adding copies of the same card!")
         
+        newVersions = []
+        
+        # We check per version in the other if it exists in ours
         for versionOther in other.versions:
             added = False
 
             for versionSelf in self.versions:
                 if versionOther == versionSelf:
-                    versionSelf += versionOther
+                    newVersions.append(versionSelf + versionOther)
                     added = True
             
             if not added:
-                self.versions.append(versionOther)
+                newVersions.append(versionOther)
         
-        return self
+        for versionSelf in self.versions:
+            if not versionSelf in newVersions:
+                newVersions.append(versionSelf)
+        
+        return Card(name=self.name, internal_id=self.internal_id, versions=newVersions)
 
 
 

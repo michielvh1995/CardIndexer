@@ -8,7 +8,7 @@ from beanie import init_beanie, Document
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from .database import Database, MockEngine
-
+from .models import Card, CardVersion
 from .settings import Settings
 from .routers import cards, decks
 
