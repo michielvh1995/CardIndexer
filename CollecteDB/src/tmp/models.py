@@ -1,4 +1,6 @@
 from __future__ import annotations
+import json
+from typing import Any
 
 from beanie import Document, Indexed
 from pydantic import BaseModel, Field
@@ -12,10 +14,15 @@ class CardVersion(BaseModel):
     set_code : str | None = None
     number: str | None = None
 
+    # Extra details regarding the cards. These will be used in a future update
+    rarity : str | None
+    finish : str  = "nonfoil" # replace foil with this
+
     def to_json(self):
         return {
             'card_count' : self.card_count,
-            'foil' : self.foil,
+            'finish' : self.finish,
+            'rarity': self.rarity,
             'multiverseID' : self.multiverseID,
             'set_code' : self.set_code,
             'number': self.number
@@ -29,13 +36,24 @@ class CardVersion(BaseModel):
         set_code  = str(obj.get("set_code"))
         number = obj.get("number")
 
+        rarity = obj.get("rarity")
+        finish = obj.get("finish", "nonfoil")
+
+        if finish == "nonfoil" and foil:
+            finish = "foil"
+
         return CardVersion(card_count=card_count, 
-                            foil= foil,
+                            foil = foil,
                             multiverseID = multiverseID,
                             set_code = set_code,
-                            number = number)
+                            number = number,
+                            rarity =rarity,
+                            finish =finish)
 
     def __eq__(self, other : CardVersion):
+        # if (self.finish is not None) and (other.finish is not None):
+        #     return self.finish == other.finish and ((self.number == other.number and self.set_code == other.set_code) or (self.multiverseID is not None and other.multiverseID is not None and self.multiverseID == other.multiverseID) )    
+        
         return self.foil == other.foil and ((self.number == other.number and self.set_code == other.set_code) or (self.multiverseID is not None and other.multiverseID is not None and self.multiverseID == other.multiverseID) )
 
     def __gt__(self, rhs : CardVersion):
@@ -73,7 +91,25 @@ class CardVersion(BaseModel):
         elif other.multiverseID is not None:
             multiverseID = other.multiverseID
 
-        return CardVersion(card_count = card_count, set_code=set_code, number=number, multiverseID=multiverseID, foil=self.foil)
+        finish = None
+        if self.finish is not None:
+            finish = self.finish
+        elif other.finish is not None:
+            finish = other.finish
+
+        rarity = None
+        if self.rarity is not None:
+            rarity = self.rarity
+        elif other.rarity is not None:
+            rarity = other.rarity
+
+        return CardVersion(card_count = card_count,
+                        set_code=set_code, 
+                        number=number, 
+                        multiverseID=multiverseID, 
+                        foil=self.foil,
+                        finish = finish,
+                        rarity=rarity)
         
 # Base model for the cards, currently using a legacy version as this is currently in use with the front end as well 
 class Card(BaseModel):
@@ -81,12 +117,43 @@ class Card(BaseModel):
     internal_id : int | None
     versions : list[CardVersion]
 
+    # Extra details regarding the cards
+    colour: list[str] | None
+
     __name__ = "Card"
+
+    def __len__(self):
+        return len(self.versions)
+
+
+    def __getitem__(self, key : dict[str, any]):
+        slc = []
+        keys = key.keys()
+        
+        for i in range(len(self.versions)):
+            fits = True
+
+            # Check if each atribute exists on the version, and if it does if it matches the filter value
+            for k in keys:
+                at = getattr(self.versions[i], k, None)
+
+                if at is not None and at != key[k]:
+                    fits = False
+                    break
+            
+            if fits:
+                slc.append(i)
+
+        return Card(name=self.name, 
+                    internal_id=self.internal_id, 
+                    colour=self.colour, 
+                    versions=[self.versions[i] for i in slc])
 
     def to_json(self):
         return {
             'name' : self.name,
             'internal_id' : self.internal_id,
+            'colour' : json.dumps(self.colour),
             'versions' : [ver.to_json() for ver in self.versions]
         }
     
@@ -94,9 +161,13 @@ class Card(BaseModel):
     def from_dict(obj: any):
         name = obj.get("name")
         internal_id = obj.get("internal_id")
+        colour = obj.get("colour")
         versions = [CardVersion.from_dict(ver) for ver in obj.get("versions")]
 
-        return Card(name=name, internal_id=internal_id, versions = versions)
+        if colour is not None:
+            colour = json.loads(colour)
+
+        return Card(name=name, internal_id=internal_id, colour=colour, versions = versions)
 
     def __str__(self):
         return f'{self.name}: {len(self.versions)} versions'
@@ -130,7 +201,7 @@ class Card(BaseModel):
             if not versionSelf in newVersions:
                 newVersions.append(versionSelf)
         
-        return Card(name=self.name, internal_id=self.internal_id, versions=newVersions)
+        return Card(name=self.name, internal_id=self.internal_id, colour=self.colour, versions=newVersions)
 
 
 

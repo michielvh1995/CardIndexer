@@ -1,7 +1,7 @@
 import json
 from .base import DatabaseEngine
 
-from ..models import Card
+from ..models import Card, CardVersion
 
 class MockEngine(DatabaseEngine):
     type = "MockDB"
@@ -31,8 +31,32 @@ class MockEngine(DatabaseEngine):
         return updated
 
     @classmethod
-    def QueryCards(cls, filters : dict[str, any]):
-        return cls.QueryCards(filters)
+    def QueryCards(cls, filters : dict[str, any]) -> list[Card]:
+        # Querying cards is a bit more annoying than expected:
+        # We have both card and version filters:
+        # Card filters are: name & colour
+        # Version filters are: rarity, set, collectors number, finish, multiverseID
+        selection = []
+
+        if 'name' in filters:
+            selection = [cls.Data[cardname] for cardname in cls.Data.keys() if filters["name"].lower() in cardname.lower()]
+        else: 
+            selection = cls.Data.values()
+        
+        # Then we filter the cards down to the right colours....
+        if 'colours' in filters:
+            if filters['cmt'] == '=': 
+                selection = [card for card in selection if card.colour is not None and card.colour == filters['colours']]
+            if filters['cmt'] == '>=':
+                selection = [card for card in selection if card.colour is not None and set(filters['colours']).issubset(card.colour)]
+            if filters['cmt'] == '<=': 
+                selection = [card for card in selection if card.colour is not None and set(card.colour).issubset(filters['colours'])]
+        
+        selection = [card[filters] for card in selection]
+        selection = [card for card in selection if len(card)]
+
+        return selection
+    
 
     @classmethod
     def QueryByName(cls, name: str):
@@ -49,7 +73,8 @@ class MockEngine(DatabaseEngine):
         cardsData = cls.GetAll()
         dictionized = {}
         for card in [cardsData[key] for key in cardsData.keys()]:
-            dictionized[card.name] = card.to_json()
+            if len(card): # This if removes cards without versions
+                dictionized[card.name] = card.to_json()
 
         with open('./src/tmp/cardsdata.json', 'w+') as fil:
             json.dump(dictionized, fil, indent=2)

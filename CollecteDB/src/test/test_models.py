@@ -108,8 +108,9 @@ class TestCardModelMethods(unittest.TestCase):
         
         cardThree = Card (
             name="Werefox Bodyguard",
-            versions=[CardVersion(card_count=2, set_code="woe", number=39), 
-                    CardVersion(card_count=2, set_code="woe", number=39, foil=True)])
+            versions=[
+                CardVersion(card_count=2, set_code="woe", number=39), 
+                CardVersion(card_count=2, set_code="woe", number=39, foil=True)])
         
         # Ensure uniqueness of each cardversion after addition
         for ver in cardAdded.versions:

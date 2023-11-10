@@ -1,5 +1,5 @@
 from typing import List, Annotated
-from fastapi import APIRouter, Body, Response
+from fastapi import APIRouter, Body, Response, Request
 
 from .mockdatabase import mock_cards_data
 
@@ -19,11 +19,6 @@ router = APIRouter(
     responses={404: {"Description": "Not found"}},
 )
 
-# DEBUG
-@router.get("/storeCollection")
-async def printDictionary():
-    return {f"Stored the collection to file"}
-
 # Cards API endpoints:
 
 # Returns a list of how many of a specific card are in their locations
@@ -38,7 +33,7 @@ async def get_all_cards():
     cardsData = Database.GetAll()
     cards = [cardsData[key] for key in cardsData.keys()]
 
-    return {"Cards" : cards}
+    return {"Cards" : cards[0:20]}
 
 # Returns all information regarding a card in the collection
 @router.get("/{card_name}")
@@ -47,29 +42,21 @@ async def get_cards(card_name:str):
 
 @router.get("")
 async def get_cards(
-        name : str | None = None,
-        set : str | None = None,
-        number: str | None = None,
-        multiverseID : int | None = None,
-        foil : bool = False
+        request: Request
     ):
 
-    # Filterfunction used to filter the mock database based on the query variables
-    def filterFunc(card : Card):
-        if name is not None and not card.name == name:
-            return False
+    print("params:")
+    for p in request.query_params:
+        print(p, request.query_params[p])
 
-        if multiverseID is not None and not multiverseID in [vers.multiverseID for vers in card.versions]:
-            return False
+    filters = {}
 
-        if foil and not foil in [vers.foil for vers in card.versions]:
-            return False
 
-        return True
-
-    # DEBUG: print the results of the query
-    print(list(filter(filterFunc, mock_cards_data)))
-    return { "Cards" : list(filter(filterFunc, mock_cards_data)) }
+    queried = Database.QueryCards(dict({p: request.query_params[p] for p in request.query_params}))
+    
+    # DEBUG:
+    print(queried[:40])
+    return { "Cards" : queried[:40] }
 
 
 @router.post("/new/")

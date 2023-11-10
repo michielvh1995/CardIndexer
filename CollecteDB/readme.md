@@ -12,3 +12,11 @@ To run the docker container containing the API run `docker run -p 80000:3000 col
 
 ## Running the database
 test mongoDB: `docker run -d -p 27017:27017 --name test-mongo mongo:latest`
+
+## Debug run using uvicorn:
+`uvicorn src.tmp:app --host 0.0.0.0 --port 8000`
+
+## Running unittests
+Go to `/src/` then use `python -m unittest discover -v` or `python -m unittest discover -v test`.
+
+use `python -m unittest -v test\test_{MODULE}.py` to test individual modules (i.e. `python -m unittest -v test\test_models.py` to run the tests for the Card and CardVersion models).
